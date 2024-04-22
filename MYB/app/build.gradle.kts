@@ -62,7 +62,7 @@ dependencies {
     // Extend Icons
     implementation("androidx.compose.material:material-icons-extended:1.5.4")
 
-
+    implementation ("androidx.preference:preference-ktx:1.1.1")
 
 //    implementation("androidx.room:room-runtime:$roomVersion")
 

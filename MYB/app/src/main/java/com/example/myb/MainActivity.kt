@@ -19,8 +19,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var expensesDao: ExpenseDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        //super.onCreate(savedInstanceState)
+        //setContentView(R.layout.activity_main)
+            super.onCreate(savedInstanceState)
+            supportFragmentManager.beginTransaction()
+                .replace(android.R.id.content, SettingsFragment())
+                .commit()
+
 
         val isDeleted = applicationContext.deleteDatabase("MYB.db")
         Log.d("DatabaseDeleted", "Is database deleted? $isDeleted")
