@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F5F5">
@@ -14,7 +15,8 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Category Template -->
+
+            <!-- MYB Header -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -25,79 +27,126 @@
                 android:textStyle="bold"
                 android:textSize="24sp" />
 
-            <!-- Income Category -->
-            <TextView
+            <!-- Income Section -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Income"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:padding="8dp"/>
+                android:layout_marginTop="16dp"
+                card_view:cardElevation="4dp"
+                card_view:cardCornerRadius="4dp">
 
-            <!-- List for Income items -->
-            <ListView
-                android:id="@+id/listIncome"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:background="@drawable/cardview_border">>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Income"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                    <!-- Dynamic list for Income items -->
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="+ add income"
+                        android:id="@+id/addIncomeButton"
+                        android:background="@drawable/button_transparent"
+                        android:textColor="@android:color/black"
+                        android:gravity="start|center_vertical"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Preservations Section -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="10dp"
-                android:listSelector="@android:color/transparent" />
+                android:layout_marginTop="16dp"
+                card_view:cardElevation="4dp"
+                card_view:cardCornerRadius="4dp">
 
-            <Button
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:background="@drawable/cardview_border">>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Preservations"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                    <!-- Dynamic list for Preservations items -->
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="+ add preservation"
+                        android:id="@+id/addPreservationButton"
+                        android:background="@drawable/button_transparent"
+                        android:textColor="@android:color/black"
+                        android:gravity="start|center_vertical"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Expenses Section -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="+ add income"
-                android:id="@+id/addIncomeButton"
-                android:background="@drawable/custom_button" />
+                android:layout_marginTop="16dp"
+                card_view:cardElevation="4dp"
+                card_view:cardCornerRadius="4dp">
 
-            <!-- Preservations/Savings Category -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Preservations/Savings"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:padding="8dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:background="@drawable/cardview_border">>
 
-            <!-- List for Preservations/Savings items -->
-            <ListView
-                android:id="@+id/listSavings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="10dp"
-                android:listSelector="@android:color/transparent" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Expenses"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="+ add preservation"
-                android:id="@+id/addPreservationButton"
-                android:background="@drawable/custom_button" />
+                    <!-- Dynamic list for Expenses items -->
 
-            <!-- Expenses Category -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Expenses"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:padding="8dp"/>
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="+ add an expense"
+                        android:id="@+id/addExpenseButton"
+                        android:background="@drawable/button_transparent"
+                        android:textColor="@android:color/black"
+                        android:gravity="start|center_vertical"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-            <!-- List for Expenses items -->
-            <!-- You would create a separate ListView or RecyclerView here similar to above -->
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="+ add an expense"
-                android:id="@+id/addExpenseButton"
-                android:background="@drawable/custom_button" />
-
+            <!-- Add Category Button -->
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="+ add category"
                 android:id="@+id/addCategoryButton"
-                android:background="@drawable/custom_button" />
-
+                android:background="@drawable/button_transparent"
+                android:textColor="@android:color/black"
+                android:gravity="start|center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:layout_marginTop="16dp" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
