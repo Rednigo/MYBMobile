@@ -1,18 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!-- settings.xml -->
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="Header">
-        <Preference
-            app:title="Team Name"
-            app:summary="Your Team Name" />
-        <ListPreference
-            app:key="view_type"
-            app:title="View Type"
-            app:summary="Select view type"
-            app:entries="@array/view_types"
-            app:entryValues="@array/view_type_values"
-            app:defaultValue="settings" />
-    </PreferenceCategory>
+    <com.example.myb.CustomHeaderView
+        app:key="custom_header"
+        app:title="Header"
+        app:layout="@layout/custom_header" />
 
     <PreferenceCategory app:title="Language">
         <ListPreference
