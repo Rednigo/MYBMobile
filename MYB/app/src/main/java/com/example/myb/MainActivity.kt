@@ -2,6 +2,7 @@ package com.example.myb
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
+import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var incomesDao: IncomeDao
     private lateinit var expenseCategoriesDao: ExpenseCategoryDao
     private lateinit var expensesDao: ExpenseDao
+    private lateinit var expenseCategoriesLayout: ViewGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,8 +78,8 @@ class MainActivity : AppCompatActivity() {
             Log.d("Expense", it.toString())
         }
 
-        val buttonAddIncome: Button = findViewById(R.id.buttonAddIncome)
-        val buttonAddSavings: Button = findViewById(R.id.buttonAddSavings)
+        val buttonAddIncome: Button = findViewById(R.id.addIncomeButton)
+        val buttonAddSavings: Button = findViewById(R.id.addPreservationButton)
 
         // Set a click listener for the Add Income button
         buttonAddIncome.setOnClickListener {
@@ -92,6 +94,7 @@ class MainActivity : AppCompatActivity() {
             // Similar to the Add Income, show a dialog or start a new activity to add savings
             showSavingsDialog()
         }
+
 
     }
     private fun showIncomeDialog(income: Income? = null) {
