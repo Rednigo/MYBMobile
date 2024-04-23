@@ -59,6 +59,8 @@ dependencies {
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.5")
 
+    implementation ("androidx.recyclerview:recyclerview:1.2.1")
+
     // Extend Icons
     implementation("androidx.compose.material:material-icons-extended:1.5.4")
 

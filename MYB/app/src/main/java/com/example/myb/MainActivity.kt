@@ -1,6 +1,8 @@
 package com.example.myb
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import com.example.myb.dao.ExpenseCategoryDao
@@ -9,6 +11,10 @@ import com.example.myb.dao.UserDao
 import com.example.myb.database.AppDatabase
 import com.example.myb.model.Savings
 import com.example.myb.model.User
+import androidx.appcompat.app.AlertDialog
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
     private lateinit var db: AppDatabase
@@ -69,5 +75,133 @@ class MainActivity : AppCompatActivity() {
         expenses.forEach {
             Log.d("Expense", it.toString())
         }
+
+        val buttonAddIncome: Button = findViewById(R.id.buttonAddIncome)
+        val buttonAddSavings: Button = findViewById(R.id.buttonAddSavings)
+
+        // Set a click listener for the Add Income button
+        buttonAddIncome.setOnClickListener {
+            // Code to handle Add Income button click
+            // You might want to show a dialog or start a new activity to add income
+            showIncomeDialog()
+        }
+
+        // Set a click listener for the Add Savings button
+        buttonAddSavings.setOnClickListener {
+            // Code to handle Add Savings button click
+            // Similar to the Add Income, show a dialog or start a new activity to add savings
+            showSavingsDialog()
+        }
+
     }
+    private fun showIncomeDialog(income: Income? = null) {
+        val dialogView = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            setPadding(50, 40, 50, 0)
+        }
+
+        val incomeNameEditText = EditText(this).apply {
+            hint = "Name of Income"
+            setText(income?.IncomeName ?: "")
+        }
+        val predictedIncomeEditText = EditText(this).apply {
+            hint = "Predicted Income"
+            inputType = InputType.TYPE_CLASS_NUMBER
+            setText(income?.Amount?.toString() ?: "")
+        }
+
+        dialogView.addView(incomeNameEditText)
+        dialogView.addView(predictedIncomeEditText)
+
+        AlertDialog.Builder(this)
+            .setTitle(if (income == null) "Add Income" else "Edit Income")
+            .setView(dialogView)
+            .setPositiveButton("Save") { _, _ ->
+                val name = incomeNameEditText.text.toString()
+                val predictedIncome = predictedIncomeEditText.text.toString().toFloatOrNull()
+                if (name.length in 5..100 && predictedIncome != null) {
+                    if (income == null) {
+                        // Add new income
+                        val newIncome = Income(IncomeName = name, Amount = predictedIncome, UserId = 1) // Use actual user id
+                        incomesDao.insertAll(newIncome)
+                    } else {
+                        // Update existing income
+                        val updatedIncome = income.copy(IncomeName = name, Amount = predictedIncome)
+                        incomesDao.update(updatedIncome)
+                    }
+                    // Refresh list or UI here
+                } else {
+                    Toast.makeText(this, "Invalid input", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    // Method to confirm and delete income
+    private fun confirmDeleteIncome(income: Income) {
+        AlertDialog.Builder(this)
+            .setMessage("Are you sure you want to delete ${income.IncomeName}?")
+            .setPositiveButton("Delete") { _, _ ->
+                incomesDao.delete(income)
+                // Refresh list or UI here
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    // Function to show dialog for adding or editing savings
+    private fun showSavingsDialog(saving: Savings? = null) {
+        val layout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(50, 40, 50, 0)
+        }
+
+        val nameEditText = EditText(this).apply {
+            hint = "Назва заощадження"
+            setText(saving?.SavingsName ?: "")
+        }
+
+        val amountEditText = EditText(this).apply {
+            hint = "Кінцева сума заощадження"
+            setText(saving?.Amount?.toString() ?: "")
+            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+        }
+
+        layout.addView(nameEditText)
+        layout.addView(amountEditText)
+
+        AlertDialog.Builder(this)
+            .setTitle(if (saving == null) "Add Savings" else "Edit Savings")
+            .setView(layout)
+            .setPositiveButton("Save") { _, _ ->
+                val name = nameEditText.text.toString()
+                val amount = amountEditText.text.toString().toFloat()
+                if (saving == null) {
+                    val newSaving = Savings(SavingsName = name, Amount = amount, Date = System.currentTimeMillis(), UserId = 1)  // Use actual UserId
+                    savingsDao.insertAll(newSaving)
+                } else {
+                    val updatedSaving = saving.copy(SavingsName = name, Amount = amount)
+                    savingsDao.update(updatedSaving)
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    // Function to delete a savings
+    private fun deleteSavings(saving: Savings) {
+        AlertDialog.Builder(this)
+            .setMessage("Are you sure you want to delete ${saving.SavingsName}?")
+            .setPositiveButton("Delete") { _, _ ->
+                savingsDao.delete(saving)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
 }
