@@ -1,8 +1,9 @@
 from sqlalchemy.orm import Session
 
 from core.models.models import User
-from core.repositories.user_repository import db_create_user, db_get_user_by_username, db_get_user, db_get_users
-from core.schemas.user_schemas import UserCreateSchema
+from core.repositories.user_repository import db_create_user, db_get_user_by_username, db_get_user, db_get_users, \
+    db_update_user
+from core.schemas.user_schemas import UserCreateSchema, UpdateSettings, UserUpdateSchema
 from core.security.password_check import get_password_hash
 
 
@@ -26,7 +27,16 @@ def create_user(db: Session, user_data: UserCreateSchema):
     return db_create_user(db, new_user)
 
 
-def get_user(db: Session, user_id: int):
+def update_user_settings(db: Session, user_data: UpdateSettings):
+    new_user = UserUpdateSchema(
+        username=user_data.username,
+        language=user_data.language,
+        is_light_scheme=user_data.is_light_scheme,
+    )
+    return db_update_user(db, user_data.id, new_user)
+
+
+def get_user_by_id(db: Session, user_id: int):
     user = db_get_user(db, user_id)
     if not user:
         return None

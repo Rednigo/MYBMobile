@@ -17,7 +17,7 @@ class User(Base):
     email = Column(String(255), unique=True, nullable=False)
     hashed_password = Column(String(255), nullable=False)
     is_light_theme = Column(Boolean, default=True)
-    language = Column(String(50))
+    language = Column(String(50), default="uk")
 
     # Relationships
     incomes = relationship('Income', back_populates='user')
