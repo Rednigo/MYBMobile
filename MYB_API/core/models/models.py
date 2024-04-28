@@ -50,6 +50,7 @@ class ExpenseCategory(Base):
     __tablename__ = "expense_category"
     id = Column(Integer, primary_key=True, index=True)
     category_name = Column(String(255), nullable=False)
+    amount = Column(Float, nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
 
     # Relationships

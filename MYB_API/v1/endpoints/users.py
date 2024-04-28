@@ -15,7 +15,7 @@ def get_users_endpoint(form_data: UserLoginSchema, db: Session = Depends(get_db)
     user = db_get_user_by_username(db, username=form_data.username)
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
-    if not verify_password(form_data.password, user.hash_password):
+    if not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
     return user

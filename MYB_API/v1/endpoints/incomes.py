@@ -16,7 +16,7 @@ router = APIRouter()
 
 @router.post("/incomes", response_model=IncomeSchema)
 def create_income_endpoint(income: IncomeCreateSchema, db: Session = Depends(get_db)):
-    return create_income(db=db, income=income, user_id=income.user_id)
+    return create_income(db=db, income=income)
 
 
 @router.get("/incomes", response_model=List[IncomeSchema])

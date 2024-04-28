@@ -11,8 +11,8 @@ from core.repositories.income_repository import (
 from core.schemas.income_schemas import IncomeCreateSchema, IncomeUpdateSchema
 
 
-def create_income(db: Session, income: IncomeCreateSchema, user_id: int):
-    return db_create_income(db=db, income=income, user_id=user_id)
+def create_income(db: Session, income: IncomeCreateSchema):
+    return db_create_income(db=db, income=income)
 
 
 def get_incomes_by_user_id(db: Session, user_id: int, skip: int = 0, limit: int = 100) -> List[Income]:

@@ -11,8 +11,8 @@ def db_get_all_incomes_by_user_id(db: Session, user_id: int, skip: int = 0, limi
     return db.query(Income).filter(Income.user_id == user_id).offset(skip).limit(limit).all()
 
 
-def db_create_income(db: Session, income: IncomeCreateSchema, user_id: int):
-    db_income = Income(**income.dict(), user_id=user_id)
+def db_create_income(db: Session, income: IncomeCreateSchema):
+    db_income = Income(**income.dict())
     db.add(db_income)
     db.commit()
     db.refresh(db_income)

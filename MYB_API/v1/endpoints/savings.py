@@ -17,7 +17,7 @@ router = APIRouter()
 
 @router.post("/savings", response_model=SavingsSchema)
 def create_savings_endpoint(savings: SavingsCreateSchema, db: Session = Depends(get_db)):
-    return create_savings(db=db, savings=savings, user_id=savings.user_id)
+    return create_savings(db=db, savings=savings)
 
 
 @router.get("/savings", response_model=List[SavingsSchema])

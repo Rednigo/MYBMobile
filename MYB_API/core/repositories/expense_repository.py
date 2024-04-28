@@ -12,14 +12,8 @@ def db_get_all_expenses_by_category_id(db: Session, category_id: int, skip: int 
     return db.query(Expense).filter(Expense.category_id == category_id).offset(skip).limit(limit).all()
 
 
-def db_create_expense(db: Session, expense: ExpenseCreateSchema, user_id: int, category_id: int):
-    db_expense = Expense(
-        expense_name=expense.expense_name,
-        amount=expense.amount,
-        date=expense.date or datetime.utcnow(),
-        user_id=user_id,
-        category_id=category_id
-    )
+def db_create_expense(db: Session, expense: ExpenseCreateSchema):
+    db_expense = Expense(**expense.dict())
     db.add(db_expense)
     db.commit()
     db.refresh(db_expense)

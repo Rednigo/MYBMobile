@@ -11,8 +11,8 @@ from core.repositories.savings_repository import (
 from core.schemas.savings_schemas import SavingsCreateSchema, SavingsUpdateSchema
 
 
-def create_savings(db: Session, savings: SavingsCreateSchema, user_id: int):
-    return db_create_savings(db=db, savings=savings, user_id=user_id)
+def create_savings(db: Session, savings: SavingsCreateSchema):
+    return db_create_savings(db=db, savings=savings)
 
 
 def get_savings_by_user_id(db: Session, user_id: int, skip: int = 0, limit: int = 100) -> List[Savings]:

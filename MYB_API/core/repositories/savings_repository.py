@@ -11,8 +11,8 @@ def db_get_savings_by_user_id(db: Session, user_id: int, skip: int = 0, limit: i
     return db.query(Savings).filter(Savings.user_id == user_id).offset(skip).limit(limit).all()
 
 
-def db_create_savings(db: Session, savings: SavingsCreateSchema, user_id: int):
-    db_savings = Savings(**savings.dict(), user_id=user_id)
+def db_create_savings(db: Session, savings: SavingsCreateSchema):
+    db_savings = Savings(**savings.dict())
     db.add(db_savings)
     db.commit()
     db.refresh(db_savings)

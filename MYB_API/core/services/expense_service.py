@@ -11,8 +11,8 @@ from core.repositories.expense_repository import (
 from core.schemas.expense_schemas import ExpenseCreateSchema, ExpenseUpdateSchema
 
 
-def create_expense(db: Session, expense: ExpenseCreateSchema, user_id: int, category_id: int):
-    return db_create_expense(db=db, expense=expense, user_id=user_id, category_id=category_id)
+def create_expense(db: Session, expense: ExpenseCreateSchema):
+    return db_create_expense(db=db, expense=expense)
 
 
 def get_expenses_by_category_id(db: Session, category_id: int, skip: int = 0, limit: int = 100) -> List[Expense]:

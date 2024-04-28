@@ -17,7 +17,7 @@ router = APIRouter()
 
 @router.post("/expense-categories", response_model=ExpenseCategorySchema)
 def create_expense_category_endpoint(category: ExpenseCategoryCreateSchema, db: Session = Depends(get_db)):
-    return create_expense_category(db=db, category=category, user_id=category.user_id)
+    return create_expense_category(db=db, category=category)
 
 
 @router.get("/expense-categories", response_model=List[ExpenseCategorySchema])
