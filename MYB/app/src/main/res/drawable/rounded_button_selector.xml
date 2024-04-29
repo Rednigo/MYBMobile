@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/accent_color_dark" />
+    <corners android:radius="60dp" />
+</shape>
+<!--<selector xmlns:android="http://schemas.android.com/apk/res/android">-->
+<!--    &lt;!&ndash; Pressed state &ndash;&gt;-->
+<!--    <item android:state_pressed="true">-->
+<!--        <shape android:shape="rectangle">-->
+<!--            <solid android:color="@color/accent_color_dark" />-->
+<!--            <corners android:radius="16dp" />-->
+<!--        </shape>-->
+<!--    </item>-->
+<!--    &lt;!&ndash; Default state &ndash;&gt;-->
+<!--    <item>-->
+<!--        <shape android:shape="rectangle">-->
+<!--            <solid android:color="@color/accent_color_light" />-->
+<!--            <corners android:radius="16dp" />-->
+<!--        </shape>-->
+<!--    </item>-->
+<!--</selector>-->
