@@ -4,13 +4,13 @@
         app:layout="@layout/custom_header"
         app:key="custom_header" />
 
+
     <PreferenceCategory app:title="Language">
         <ListPreference
             app:key="language"
             app:title="Language"
             app:summary="Select your preferred language"
-            app:entries="@array/languages"
-            app:entryValues="@array/language_codes"
+            app:entryValues="@array/languages"
             app:defaultValue="en" />
     </PreferenceCategory>
 
@@ -19,7 +19,6 @@
             app:key="theme"
             app:title="Theme"
             app:summary="Select app theme"
-            app:entries="@array/themes"
             app:entryValues="@array/theme_values"
             app:defaultValue="light" />
     </PreferenceCategory>

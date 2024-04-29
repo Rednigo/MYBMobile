@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.compose.ui.graphics.Color
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.myb.R
 
@@ -47,6 +49,14 @@ class StatisticsFragment : Fragment() {
             // Додаємо рядок у загальну таблицю
             tableLayout.addView(rowView)
         }
+
+// Додаємо лінію в кінці таблиці
+        val lineView = View(requireContext())
+        val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 5) // висота лінії
+        params.setMargins(0, 25, 0, 0) // встановлюємо відступи вгорі
+        lineView.layoutParams = params
+        lineView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.table_color)) // колір лінії
+        tableLayout.addView(lineView)
 
         // Повертаємо кореневий макет фрагмента
         return rootView

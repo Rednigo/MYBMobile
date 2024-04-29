@@ -4,25 +4,12 @@
         <item>Statistic</item>
     </string-array>
 
-    <string-array name="view_type_values">
-        <item>settings</item>
-        <item>statistic</item>
-    </string-array>
 
     <string-array name="languages">
         <item>English</item>
         <item>Ukranian</item>
     </string-array>
 
-    <string-array name="language_codes">
-        <item>en</item>
-        <item>uk</item>
-    </string-array>
-
-    <string-array name="themes">
-        <item>Light</item>
-        <item>Dark</item>
-    </string-array>
 
     <string-array name="theme_values">
         <item>light</item>
