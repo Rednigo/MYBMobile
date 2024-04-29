@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.preference)
+    
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -59,6 +60,8 @@ dependencies {
 
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.5")
+    implementation ("androidx.cardview:cardview:1.0.0")
+    implementation ("androidx.recyclerview:recyclerview:1.2.1")
 
     // Extend Icons
     implementation("androidx.compose.material:material-icons-extended:1.5.4")
