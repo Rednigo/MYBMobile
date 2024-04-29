@@ -1,4 +1,5 @@
 package com.example.myb
+import StatisticsFragment
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -27,8 +28,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var expenseCategoriesLayout: ViewGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
+       // super.onCreate(savedInstanceState)
+       // setContentView(StatisticsFragment())
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        supportFragmentManager.beginTransaction()
+            .replace(android.R.id.content, StatisticsFragment())
+            .commit()
+
 
 //        val isDeleted = applicationContext.deleteDatabase("MYB.db")
 //        Log.d("DatabaseDeleted", "Is database deleted? $isDeleted")
