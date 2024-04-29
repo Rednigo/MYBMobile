@@ -11,13 +11,12 @@ import com.example.myb.R
 
 class StatisticsFragment : Fragment() {
 
-    @SuppressLint("ResourceType")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Задаємо макет фрагмента
-        val rootView = inflater.inflate(R.xml.statistics, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_statistics, container, false)
 
         // Отримуємо рідну ViewGroup, в яку будемо додавати рядки
-        val tableLayout = rootView.findViewById<LinearLayout>(R.id.statistics_table)
+        val tableLayout = rootView.findViewById<LinearLayout>(R.id.statistics_table_id)
 
         // Перелік даних для кожного рядка (наприклад, замість цього можна використовувати дані з бази даних)
         val months = arrayOf("January", "February", "March", "April")

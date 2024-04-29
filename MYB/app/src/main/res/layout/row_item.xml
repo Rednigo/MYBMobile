@@ -1,43 +1,49 @@
-<!-- layout/row_item.xml -->
+<!-- row_item.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:background="@android:color/white"
+    android:orientation="horizontal"
+    android:padding="8dp">
 
     <!-- TextView для місяця -->
     <TextView
         android:id="@+id/monthTextView"
-        android:layout_width="0dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textColor="#000000"
-        android:textStyle="bold" />
+        />
+
+    <!-- Проміжок між місяцем і доходами -->
+    <View
+        android:layout_width="10dp"
+        android:layout_height="match_parent"/>
 
     <!-- TextView для доходів -->
     <TextView
         android:id="@+id/incomeTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textColor="#000000"
-        android:textStyle="bold" />
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"/>
+
+    <!-- Проміжок між доходами і витратами -->
+    <View
+        android:layout_width="25dp"
+        android:layout_height="match_parent"/>
 
     <!-- TextView для витрат -->
     <TextView
         android:id="@+id/expenseTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textColor="#000000"
-        android:textStyle="bold" />
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"/>
+
+    <!-- Проміжок між витратами і заощадженнями -->
+    <View
+        android:layout_width="12dp"
+        android:layout_height="match_parent"/>
 
     <!-- TextView для заощаджень -->
     <TextView
         android:id="@+id/savedTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textColor="#000000"
-        android:textStyle="bold" />
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
