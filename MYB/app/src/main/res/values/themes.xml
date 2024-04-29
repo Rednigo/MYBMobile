@@ -2,7 +2,15 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.MYB" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/accent_color</item>
+    </style>
+
+    <style name="LoginButtonStyle" parent="ThemeOverlay.AppCompat">
+        <item name="colorAccent">@color/accent_color_light</item>
+    </style>
+
+    <style name="SignupButtonStyle" parent="ThemeOverlay.AppCompat">
+        <item name="colorAccent">@color/accent_color_dark</item>
     </style>
 
     <style name="Theme.MYB" parent="Base.Theme.MYB" />
