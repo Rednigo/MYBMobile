@@ -1,0 +1,43 @@
+<!-- layout/row_item.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <!-- TextView для місяця -->
+    <TextView
+        android:id="@+id/monthTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="#000000"
+        android:textStyle="bold" />
+
+    <!-- TextView для доходів -->
+    <TextView
+        android:id="@+id/incomeTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="#000000"
+        android:textStyle="bold" />
+
+    <!-- TextView для витрат -->
+    <TextView
+        android:id="@+id/expenseTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="#000000"
+        android:textStyle="bold" />
+
+    <!-- TextView для заощаджень -->
+    <TextView
+        android:id="@+id/savedTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="#000000"
+        android:textStyle="bold" />
+
+</LinearLayout>

@@ -1,4 +1,5 @@
 package com.example.myb
+import StatisticsFragment
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -19,12 +20,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var expensesDao: ExpenseDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        //super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_main)
-            super.onCreate(savedInstanceState)
-            supportFragmentManager.beginTransaction()
-                .replace(android.R.id.content, SettingsFragment())
-                .commit()
+       // super.onCreate(savedInstanceState)
+       // setContentView(StatisticsFragment())
+        super.onCreate(savedInstanceState)
+        supportFragmentManager.beginTransaction()
+            .replace(android.R.id.content, StatisticsFragment())
+            .commit()
 
 
         val isDeleted = applicationContext.deleteDatabase("MYB.db")
