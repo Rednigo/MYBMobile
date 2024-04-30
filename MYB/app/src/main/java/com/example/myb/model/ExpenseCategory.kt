@@ -12,7 +12,7 @@ import com.example.myb.model.User
 )
 data class ExpenseCategory(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val CategoryName: String,
-    val Amount: Float,
+    var CategoryName: String,
+    var Amount: Float,
     val UserId: Int
 )

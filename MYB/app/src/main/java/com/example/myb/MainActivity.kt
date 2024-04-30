@@ -20,7 +20,7 @@ import com.example.myb.requests.ExpenseCategoryNetworkManager
 
 class MainActivity : AppCompatActivity(), UIUpdater {
     lateinit var expenseCategoryNetworkManager: ExpenseCategoryNetworkManager
-    private lateinit var expenseNetworkManager: ExpenseNetworkManager
+    lateinit var expenseNetworkManager: ExpenseNetworkManager
     lateinit var savingsNetworkManager: SavingsNetworkManager
     lateinit var incomeNetworkManager: IncomeNetworkManager
 
@@ -39,6 +39,10 @@ class MainActivity : AppCompatActivity(), UIUpdater {
 
         setupRecyclerViews()
         setupButtons()
+
+        fetchAndDisplayIncome()
+        fetchAndDisplaySavings()
+        fetchAndDisplayExpenseCategories()
     }
 
     private fun setupRecyclerViews() {
@@ -53,12 +57,13 @@ class MainActivity : AppCompatActivity(), UIUpdater {
         savingsRecyclerView.layoutManager = LinearLayoutManager(this)
 
         val categoryRecyclerView = findViewById<RecyclerView>(R.id.expenseCategoryRecyclerView)
-        categoryAdapter = ExpenseCategoryAdapter(listOf(), this)
+        categoryAdapter = ExpenseCategoryAdapter(listOf(), this) { categoryId ->
+            // This lambda needs to fetch and return expenses for the given category ID
+            fetchExpensesForCategory(categoryId)
+        }
         categoryRecyclerView.adapter = categoryAdapter
         categoryRecyclerView.layoutManager = LinearLayoutManager(this)
-
     }
-
     private fun setupButtons() {
         findViewById<Button>(R.id.addIncomeButton).setOnClickListener {
             showIncomeDialog(null)
@@ -69,6 +74,33 @@ class MainActivity : AppCompatActivity(), UIUpdater {
         findViewById<Button>(R.id.addExpenseCategoryButton).setOnClickListener {
             showCategoryDialog(null)
         }
+    }
+    fun fetchAndDisplayIncome() {
+        // Simulate fetching data
+        val incomes = listOf<Income>() // Replace with actual data fetch logic
+        runOnUiThread {
+            incomeAdapter.updateData(incomes)
+        }
+    }
+
+    fun fetchAndDisplaySavings() {
+        val savings = listOf<Savings>() // Replace with actual data fetch logic
+        runOnUiThread {
+            savingsAdapter.updateData(savings)
+        }
+    }
+
+    fun fetchAndDisplayExpenseCategories() {
+        val expenseCategories = listOf<ExpenseCategory>() // Replace with actual data fetch logic
+        runOnUiThread {
+            categoryAdapter.updateCategories(expenseCategories)
+        }
+    }
+
+    fun fetchExpensesForCategory(categoryId: Int): List<Expense> {
+        // Fetch expenses for the given category ID
+        // This is a placeholder; you'll need to replace it with actual fetch logic
+        return listOf() // Return fetched expenses
     }
 
     fun showIncomeDialog(income: Income?) {
@@ -112,7 +144,57 @@ class MainActivity : AppCompatActivity(), UIUpdater {
     }
 
     fun showCategoryDialog(category: ExpenseCategory?) {
-        // Inflate layout and setup dialog for adding or editing category
+        val layoutInflater = LayoutInflater.from(this)
+        val dialogView = layoutInflater.inflate(R.layout.item_expense_category, null)
+        val categoryNameInput = dialogView.findViewById<EditText>(R.id.textViewCategoryName)
+        val categoryBudgetInput = dialogView.findViewById<EditText>(R.id.textViewCategoryBudget)
+
+        category?.let {
+            categoryNameInput.setText(it.CategoryName)
+            categoryBudgetInput.setText(it.Amount.toString())
+        }
+
+        AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setTitle(if (category == null) "Add Category" else "Edit Category")
+            .setPositiveButton("Save") { _, _ ->
+                val name = categoryNameInput.text.toString()
+                val budget = categoryBudgetInput.text.toString().toFloatOrNull() ?: 0f
+                if (category == null) {
+                    expenseCategoryNetworkManager.createExpenseCategory(name, budget, 1) // Assume UserId is 1
+                } else {
+                    category.CategoryName = name
+                    category.Amount = budget
+                    expenseCategoryNetworkManager.updateExpenseCategory(category.id, name, budget)
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    fun showExpenseDialog(expense: Expense?) {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.item_expense, null)
+        val nameInput = dialogView.findViewById<EditText>(R.id.textViewExpenseName)
+        val amountInput = dialogView.findViewById<EditText>(R.id.textViewExpenseAmount)
+        expense?.let {
+            nameInput.setText(it.ExpenseName)
+            amountInput.setText(it.Amount.toString())
+        }
+
+        AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setTitle(if (expense == null) "Add Expense" else "Edit Expense")
+            .setPositiveButton("Save") { _, _ ->
+                val name = nameInput.text.toString()
+                val amount = amountInput.text.toString().toFloat()
+                if (expense == null) {
+                    expenseNetworkManager.createExpense(name, amount, System.currentTimeMillis(), 1) // Assume CategoryId is 1
+                } else {
+                    expenseNetworkManager.updateExpense(expense.id, name, amount, System.currentTimeMillis())
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     override fun runOnUIThread(action: () -> Unit) {
@@ -122,114 +204,4 @@ class MainActivity : AppCompatActivity(), UIUpdater {
     override fun getContext(): Context {
         return this
     }
-
-//    private fun showIncomeDialog(income: Income? = null) {
-//        val dialogView = LinearLayout(this).apply {
-//            orientation = LinearLayout.VERTICAL
-//            layoutParams = LinearLayout.LayoutParams(
-//                LinearLayout.LayoutParams.MATCH_PARENT,
-//                LinearLayout.LayoutParams.WRAP_CONTENT
-//            )
-//            setPadding(50, 40, 50, 0)
-//        }
-//
-//        val incomeNameEditText = EditText(this).apply {
-//            hint = "Name of Income"
-//            setText(income?.IncomeName ?: "")
-//        }
-//        val predictedIncomeEditText = EditText(this).apply {
-//            hint = "Predicted Income"
-//            inputType = InputType.TYPE_CLASS_NUMBER
-//            setText(income?.Amount?.toString() ?: "")
-//        }
-//
-//        dialogView.addView(incomeNameEditText)
-//        dialogView.addView(predictedIncomeEditText)
-//
-//        AlertDialog.Builder(this)
-//            .setTitle(if (income == null) "Add Income" else "Edit Income")
-//            .setView(dialogView)
-//            .setPositiveButton("Save") { _, _ ->
-//                val name = incomeNameEditText.text.toString()
-//                val predictedIncome = predictedIncomeEditText.text.toString().toFloatOrNull()
-//                if (name.length in 5..100 && predictedIncome != null) {
-//                    if (income == null) {
-//                        // Add new income
-//                        val newIncome = Income(IncomeName = name, Amount = predictedIncome, UserId = 1) // Use actual user id
-//                        incomesDao.insertAll(newIncome)
-//                    } else {
-//                        // Update existing income
-//                        val updatedIncome = income.copy(IncomeName = name, Amount = predictedIncome)
-//                        incomesDao.update(updatedIncome)
-//                    }
-//                    // Refresh list or UI here
-//                } else {
-//                    Toast.makeText(this, "Invalid input", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//            .setNegativeButton("Cancel", null)
-//            .show()
-//    }
-//
-//    // Method to confirm and delete income
-//    private fun confirmDeleteIncome(income: Income) {
-//        AlertDialog.Builder(this)
-//            .setMessage("Are you sure you want to delete ${income.IncomeName}?")
-//            .setPositiveButton("Delete") { _, _ ->
-//                incomesDao.delete(income)
-//                // Refresh list or UI here
-//            }
-//            .setNegativeButton("Cancel", null)
-//            .show()
-//    }
-//
-//    // Function to show dialog for adding or editing savings
-//    private fun showSavingsDialog(saving: Savings? = null) {
-//        val layout = LinearLayout(this).apply {
-//            orientation = LinearLayout.VERTICAL
-//            setPadding(50, 40, 50, 0)
-//        }
-//
-//        val nameEditText = EditText(this).apply {
-//            hint = "Назва заощадження"
-//            setText(saving?.SavingsName ?: "")
-//        }
-//
-//        val amountEditText = EditText(this).apply {
-//            hint = "Кінцева сума заощадження"
-//            setText(saving?.Amount?.toString() ?: "")
-//            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
-//        }
-//
-//        layout.addView(nameEditText)
-//        layout.addView(amountEditText)
-//
-//        AlertDialog.Builder(this)
-//            .setTitle(if (saving == null) "Add Savings" else "Edit Savings")
-//            .setView(layout)
-//            .setPositiveButton("Save") { _, _ ->
-//                val name = nameEditText.text.toString()
-//                val amount = amountEditText.text.toString().toFloat()
-//                if (saving == null) {
-//                    val newSaving = Savings(SavingsName = name, Amount = amount, Date = System.currentTimeMillis(), UserId = 1)  // Use actual UserId
-//                    savingsDao.insertAll(newSaving)
-//                } else {
-//                    val updatedSaving = saving.copy(SavingsName = name, Amount = amount)
-//                    savingsDao.update(updatedSaving)
-//                }
-//            }
-//            .setNegativeButton("Cancel", null)
-//            .show()
-//    }
-//
-//    // Function to delete a savings
-//    private fun deleteSavings(saving: Savings) {
-//        AlertDialog.Builder(this)
-//            .setMessage("Are you sure you want to delete ${saving.SavingsName}?")
-//            .setPositiveButton("Delete") { _, _ ->
-//                savingsDao.delete(saving)
-//            }
-//            .setNegativeButton("Cancel", null)
-//            .show()
-//    }
 }

@@ -6,55 +6,49 @@
     android:layout_height="wrap_content"
     android:padding="16dp">
 
-    <!-- Category Name and Budget Information -->
+    <!-- Expense Name -->
     <TextView
-        android:id="@+id/textViewCategoryName"
+        android:id="@+id/textViewExpenseName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
         android:layout_marginEnd="8dp"
+        android:textSize="18sp"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/textViewExpenseAmount"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/buttonEditCategory"
-        tools:text="Category Name" />
+        app:layout_constraintEnd_toStartOf="@+id/buttonEditExpense"
+        tools:text="Expense Name" />
 
+
+    <!-- Expense Amount -->
     <TextView
-        android:id="@+id/textViewCategoryBudget"
+        android:id="@+id/textViewExpenseAmount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@+id/textViewCategoryName"
+        app:layout_constraintTop_toBottomOf="@+id/textViewExpenseName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/buttonEditCategory"
-        tools:text="Budget: $500" />
+        app:layout_constraintEnd_toStartOf="@+id/buttonEditExpense"
+        tools:text="Amount: $500" />
 
-    <!-- Buttons for Editing and Deleting Category -->
+    <!-- Button for Editing Expense -->
     <ImageButton
-        android:id="@+id/buttonEditCategory"
+        android:id="@+id/buttonEditExpense"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@android:drawable/ic_menu_edit"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/textViewCategoryBudget"
-        app:layout_constraintEnd_toStartOf="@+id/buttonDeleteCategory" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonDeleteExpense" />
 
+    <!-- Button for Deleting Expense -->
     <ImageButton
-        android:id="@+id/buttonDeleteCategory"
+        android:id="@+id/buttonDeleteExpense"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@android:drawable/ic_menu_delete"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/textViewCategoryBudget"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- Nested RecyclerView for Listing Expenses -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/expensesRecyclerView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/textViewCategoryBudget"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

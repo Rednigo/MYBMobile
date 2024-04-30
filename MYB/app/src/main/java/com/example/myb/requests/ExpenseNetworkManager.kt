@@ -1,5 +1,6 @@
-import android.content.Context
+
 import android.widget.Toast
+import com.example.myb.Expense
 import com.example.myb.interfaces.UIUpdater
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
@@ -7,6 +8,11 @@ import java.net.URL
 
 class ExpenseNetworkManager(private val uiUpdater: UIUpdater) {
     private val baseUrl = "http://your-api-url/api/expenses"
+
+    interface ExpenseFetchListener {
+        fun onExpensesFetched(expenses: List<Expense>)
+        fun onError(message: String)
+    }
 
     fun fetchAllExpenses() {
         Thread {
