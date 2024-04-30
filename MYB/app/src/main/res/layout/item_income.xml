@@ -1,32 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:padding="16dp">
 
-    <TextView
+    <!-- Income Name EditText -->
+    <EditText
         android:id="@+id/income_name_text_view"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:textSize="18sp"
+        android:layout_toStartOf="@+id/edit_income_button"
+        android:layout_marginEnd="8dp"
         android:text="Income Name" />
 
-    <TextView
+    <!-- Amount EditText -->
+    <EditText
         android:id="@+id/amount_text_view"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/edit_income_button"
+        android:layout_marginEnd="8dp"
+        android:layout_below="@id/income_name_text_view"
         android:text="$0.00" />
 
+    <!-- Edit Button -->
     <ImageButton
         android:id="@+id/edit_income_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@id/income_name_text_view"
         android:src="@android:drawable/ic_menu_edit" />
 
+    <!-- Delete Button -->
     <ImageButton
         android:id="@+id/delete_income_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/edit_income_button"
         android:src="@android:drawable/ic_menu_delete" />
-</LinearLayout>
+</RelativeLayout>

@@ -7,7 +7,7 @@
     android:padding="16dp">
 
     <!-- Expense Name -->
-    <TextView
+    <EditText
         android:id="@+id/textViewExpenseName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
 
 
     <!-- Expense Amount -->
-    <TextView
+    <EditText
         android:id="@+id/textViewExpenseAmount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

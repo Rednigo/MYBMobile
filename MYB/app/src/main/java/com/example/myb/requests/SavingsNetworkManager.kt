@@ -39,7 +39,7 @@ class SavingsNetworkManager(private val uiUpdater: UIUpdater) {
     fun createSavings(savingsName: String, amount: Float, userId: Int) {
         Thread {
             try {
-                val url = URL("$baseUrl/create")
+                val url = URL("$baseUrl/savings")
                 val connection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "POST"
                 connection.doOutput = true
@@ -80,7 +80,7 @@ class SavingsNetworkManager(private val uiUpdater: UIUpdater) {
     fun updateSavings(savingsId: Int, newName: String?, newAmount: Float?) {
         Thread {
             try {
-                val url = URL("$baseUrl/update/$savingsId")
+                val url = URL("$baseUrl/savings?savings_id=$savingsId")
                 val connection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "PUT"
                 connection.doOutput = true
@@ -120,7 +120,7 @@ class SavingsNetworkManager(private val uiUpdater: UIUpdater) {
     fun deleteSavings(savingsId: Int) {
         Thread {
             try {
-                val url = URL("$baseUrl/delete/$savingsId")
+                val url = URL("$baseUrl/savings?savings_id=$savingsId")
                 val connection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "DELETE"
 
