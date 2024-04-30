@@ -29,7 +29,7 @@ class ExpenseCategoryAdapter(private var categories: List<ExpenseCategory>, priv
             activity.showCategoryDialog(category)
         }
         holder.deleteButton.setOnClickListener {
-            activity.deleteCategory(category.id)
+            activity.expenseCategoryNetworkManager.deleteExpenseCategory(category.id)
         }
     }
 
