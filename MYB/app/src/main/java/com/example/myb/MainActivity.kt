@@ -7,9 +7,12 @@ import SavingsAdapter
 import SavingsNetworkManager
 import android.content.Context
 import android.os.Bundle
+import android.provider.ContactsContract.CommonDataKinds.Website.URL
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +20,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myb.interfaces.UIUpdater
 import com.example.myb.model.Savings
 import com.example.myb.requests.ExpenseCategoryNetworkManager
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
+import org.json.JSONArray
+import java.lang.reflect.Type
+import java.net.HttpURLConnection
+import java.net.URL
 
 class MainActivity : AppCompatActivity(), UIUpdater {
     lateinit var expenseCategoryNetworkManager: ExpenseCategoryNetworkManager
@@ -75,13 +83,119 @@ class MainActivity : AppCompatActivity(), UIUpdater {
             showCategoryDialog(null)
         }
     }
+//    fun fetchAndDisplayIncome() {
+//        Thread {
+//            try {
+//                val userId = 1 // Assuming a static user ID for demonstration
+//                val url = URL("http://192.168.0.163:8080/api/v1/incomes/incomes?user_id=$userId")
+//                val httpURLConnection = url.openConnection() as HttpURLConnection
+//                httpURLConnection.requestMethod = "GET"
+//
+//                val responseCode = httpURLConnection.responseCode
+//
+//                if (responseCode == HttpURLConnection.HTTP_OK) {
+//                    val inputStream = httpURLConnection.inputStream
+//                    val response = inputStream.bufferedReader().use { it.readText() }
+//
+//                    // Toast must be shown on the UI Thread
+//                    runOnUiThread {
+//                        Toast.makeText(this, response, Toast.LENGTH_LONG).show()
+//                    }
+////                    val inputStream = httpURLConnection.inputStream
+////                    val response = inputStream.bufferedReader().use { it.readText() }
+////                    Toast.makeText(this, response., Toast.LENGTH_SHORT).show()
+//                    // Parse the JSON response to a list of Income objects
+//                    // val incomes: List<Income> = parseJsonToIncomes(response)
+//                    // Update the RecyclerView on the UI thread
+////                    runOnUiThread {
+////                        incomeAdapter.updateData(incomes)
+////                    }
+//                } else {
+//                    runOnUiThread {
+//                        Toast.makeText(this, "Failed to fetch incomes", Toast.LENGTH_SHORT).show()
+//                    }
+//                }
+//
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//                runOnUiThread {
+//                    Toast.makeText(this, "Error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        }.start()
+//    }
+
     fun fetchAndDisplayIncome() {
-        // Simulate fetching data
-        val incomes = listOf<Income>() // Replace with actual data fetch logic
-        runOnUiThread {
-            incomeAdapter.updateData(incomes)
-        }
+        Thread {
+            try {
+                val userId = 1 // Assuming a static user ID for demonstration
+                val url = URL("http://192.168.0.163:8080/api/v1/incomes/incomes?user_id=$userId")
+                val httpURLConnection = url.openConnection() as HttpURLConnection
+                httpURLConnection.requestMethod = "GET"
+
+                val responseCode = httpURLConnection.responseCode
+
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    val inputStream = httpURLConnection.inputStream
+                    val response = inputStream.bufferedReader().use { it.readText() }
+
+                    val jArray = JSONArray(response.toString())
+                    val incomes = mutableListOf<Income>()
+                    for (i in 0..jArray.length()-1) {
+                        var jobject = jArray.getJSONObject(i)
+                        var user_id = jobject.getInt("user_id")
+                        var id = jobject.getInt("id")
+                        var income_name = jobject.getString("income_name")
+                        var amount = jobject.getInt("amount")
+                        Log.e("user_id", income_name.toString())
+                        Log.e("user_id", income_name.toString())
+                        Log.e("user_id", income_name.toString())
+                        Log.e("income_name", income_name.toString())
+                        Log.e("income_name", income_name.toString())
+                        Log.e("user_id", income_name.toString())
+                        Log.e("amount", amount.toString())
+                        incomes.add(Income(
+                            IncomeName = income_name,
+                            Amount = amount.toFloat(),
+                            id = id,
+                            UserId = user_id
+                        ))
+                    }
+
+//                    val incomes = parseJsonToIncomes(response)
+
+                    // Update the RecyclerView on the UI thread
+                    runOnUiThread {
+                        incomeAdapter.updateData(incomes)
+                    }
+                } else {
+                    runOnUiThread {
+                        Toast.makeText(this@MainActivity, "Failed to fetch incomes", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                runOnUiThread {
+                    Toast.makeText(this@MainActivity, "Error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }.start()
     }
+
+//    private fun <T> fromJson(json: String, typeToken: TypeToken<T>): T {
+//        val gson = Gson()
+//        return gson.fromJson(json, typeToken.type) // Use Gson's fromJson directly.
+//    }
+//
+//    private fun parseJsonToIncomes(json: String): List<Income> {
+//        return fromJson(json, object : TypeToken<List<Income>>() {})
+//    }
+
+//    private fun parseJsonToIncomes(response: String): List<Income> {
+//        val gson = Gson()
+//        val incomeListType = object : TypeToken<List<Income>>() {}.type
+//        return gson.fromJson(response, incomeListType)
+//    }
 
     fun fetchAndDisplaySavings() {
         val savings = listOf<Savings>() // Replace with actual data fetch logic
@@ -204,4 +318,12 @@ class MainActivity : AppCompatActivity(), UIUpdater {
     override fun getContext(): Context {
         return this
     }
+
+    override fun Gson(): Any {
+        TODO("Not yet implemented")
+    }
 }
+
+//private fun Any.fromJson(json: String, type: Type?): List<Income> {
+//
+//}

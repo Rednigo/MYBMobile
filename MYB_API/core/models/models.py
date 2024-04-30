@@ -1,10 +1,13 @@
 from datetime import datetime
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, Float, ForeignKey, Boolean
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
+
+from core.config import DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME
 from core.settings import database_url
 
 
-engine = create_engine("mysql://root:1q2w3e4r@localhost:3306/myb_mobile", echo=True)
+# engine = create_engine("mysql://root:1q2w3e4r@localhost:3306/myb_mobile", echo=True)
+engine = create_engine(f"mysql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}", echo=True)
 Base = declarative_base()
 metadata = Base.metadata
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
