@@ -7,7 +7,7 @@
     android:padding="16dp">
 
     <!-- Category Name and Budget Information -->
-    <TextView
+    <EditText
         android:id="@+id/textViewCategoryName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -18,7 +18,7 @@
         app:layout_constraintEnd_toStartOf="@+id/buttonEditCategory"
         tools:text="Category Name" />
 
-    <TextView
+    <EditText
         android:id="@+id/textViewCategoryBudget"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

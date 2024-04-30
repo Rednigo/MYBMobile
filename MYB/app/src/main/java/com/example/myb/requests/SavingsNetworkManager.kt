@@ -1,4 +1,4 @@
-import android.content.Context
+
 import android.widget.Toast
 import com.example.myb.interfaces.UIUpdater
 import java.io.OutputStreamWriter
@@ -6,7 +6,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class SavingsNetworkManager(private val uiUpdater: UIUpdater) {
-    private val baseUrl = "http://your-api-url/api/savings"
+    private val baseUrl = "http://192.168.0.76:8080/api/v1/savings"
 
     fun fetchAllSavings() {
         Thread {

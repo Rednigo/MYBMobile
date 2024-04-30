@@ -7,7 +7,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class ExpenseCategoryNetworkManager(private val uiUpdater: UIUpdater) {
-    private val baseUrl = "http://your-api-url/api/categories"
+    private val baseUrl = "http://192.168.0.76:8080/api/v1/categories"
 
     fun fetchExpenseCategories() {
         Thread {
@@ -40,7 +40,7 @@ class ExpenseCategoryNetworkManager(private val uiUpdater: UIUpdater) {
     fun createExpenseCategory(categoryName: String, amount: Float, userId: Int) {
         Thread {
             try {
-                val url = URL("$baseUrl/create")
+                val url = URL("$baseUrl/expense-categories")
                 val connection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "POST"
                 connection.doOutput = true
@@ -81,7 +81,7 @@ class ExpenseCategoryNetworkManager(private val uiUpdater: UIUpdater) {
     fun updateExpenseCategory(categoryId: Int, newName: String?, newAmount: Float?) {
         Thread {
             try {
-                val url = URL("$baseUrl/update/$categoryId")
+                val url = URL("$baseUrl/expense-categories/$categoryId")
                 val connection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "PUT"
                 connection.doOutput = true
@@ -121,7 +121,7 @@ class ExpenseCategoryNetworkManager(private val uiUpdater: UIUpdater) {
     fun deleteExpenseCategory(categoryId: Int) {
         Thread {
             try {
-                val url = URL("$baseUrl/delete/$categoryId")
+                val url = URL("$baseUrl/expense-categories/$categoryId")
                 val connection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "DELETE"
 

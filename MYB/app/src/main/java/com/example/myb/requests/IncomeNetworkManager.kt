@@ -1,4 +1,4 @@
-import android.content.Context
+
 import android.widget.Toast
 import com.example.myb.interfaces.UIUpdater
 import java.io.OutputStreamWriter
@@ -6,22 +6,22 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class IncomeNetworkManager(private val uiUpdater: UIUpdater) {
-    private val baseUrl = "http://your-api-url/api/incomes"
+    private val baseUrl = "http://192.168.0.76:8080/api/v1/incomes"
 
     fun fetchAllIncomes() {
         Thread {
             try {
-                val url = URL(baseUrl)
+                val userId = 1 // Assuming a static user ID for demonstration
+                val url = URL("$baseUrl/incomes?user_id=$userId")
                 val connection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "GET"
 
                 val responseCode = connection.responseCode
-                val response = connection.inputStream.bufferedReader().use { it.readText() }
 
                 uiUpdater.runOnUIThread {
                     val context = uiUpdater.getContext()
                     if (responseCode == HttpURLConnection.HTTP_OK) {
-                        // Parse response and update UI
+                        val response = connection.inputStream.bufferedReader().use { it.readText() }
                     } else {
                         Toast.makeText(context, "Failed to fetch incomes: $responseCode", Toast.LENGTH_SHORT).show()
                     }

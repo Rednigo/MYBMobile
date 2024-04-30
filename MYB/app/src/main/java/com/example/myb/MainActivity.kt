@@ -1,4 +1,5 @@
 package com.example.myb
+import ExpenseAdapter
 import ExpenseCategoryAdapter
 import ExpenseNetworkManager
 import IncomeAdapter
@@ -7,8 +8,6 @@ import SavingsAdapter
 import SavingsNetworkManager
 import android.content.Context
 import android.os.Bundle
-import android.provider.ContactsContract.CommonDataKinds.Website.URL
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.EditText
@@ -20,9 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myb.interfaces.UIUpdater
 import com.example.myb.model.Savings
 import com.example.myb.requests.ExpenseCategoryNetworkManager
-import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
 import org.json.JSONArray
-import java.lang.reflect.Type
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -35,6 +32,9 @@ class MainActivity : AppCompatActivity(), UIUpdater {
     private lateinit var categoryAdapter: ExpenseCategoryAdapter
     private lateinit var incomeAdapter: IncomeAdapter
     private lateinit var savingsAdapter: SavingsAdapter
+    private lateinit var expenseAdapter: ExpenseAdapter
+
+    private val baseUrl = "http://192.168.0.76:8080/api/v1"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,12 +65,13 @@ class MainActivity : AppCompatActivity(), UIUpdater {
         savingsRecyclerView.layoutManager = LinearLayoutManager(this)
 
         val categoryRecyclerView = findViewById<RecyclerView>(R.id.expenseCategoryRecyclerView)
-        categoryAdapter = ExpenseCategoryAdapter(listOf(), this) { categoryId ->
-            // This lambda needs to fetch and return expenses for the given category ID
-            fetchExpensesForCategory(categoryId)
+        categoryAdapter = ExpenseCategoryAdapter(listOf(), this) { categoryId, expenseAdapter ->
+            // This lambda now correctly fetches and updates expenses for the given category ID
+            fetchExpensesForCategory(categoryId, expenseAdapter)
         }
         categoryRecyclerView.adapter = categoryAdapter
         categoryRecyclerView.layoutManager = LinearLayoutManager(this)
+
     }
     private fun setupButtons() {
         findViewById<Button>(R.id.addIncomeButton).setOnClickListener {
@@ -83,53 +84,13 @@ class MainActivity : AppCompatActivity(), UIUpdater {
             showCategoryDialog(null)
         }
     }
-//    fun fetchAndDisplayIncome() {
-//        Thread {
-//            try {
-//                val userId = 1 // Assuming a static user ID for demonstration
-//                val url = URL("http://192.168.0.163:8080/api/v1/incomes/incomes?user_id=$userId")
-//                val httpURLConnection = url.openConnection() as HttpURLConnection
-//                httpURLConnection.requestMethod = "GET"
-//
-//                val responseCode = httpURLConnection.responseCode
-//
-//                if (responseCode == HttpURLConnection.HTTP_OK) {
-//                    val inputStream = httpURLConnection.inputStream
-//                    val response = inputStream.bufferedReader().use { it.readText() }
-//
-//                    // Toast must be shown on the UI Thread
-//                    runOnUiThread {
-//                        Toast.makeText(this, response, Toast.LENGTH_LONG).show()
-//                    }
-////                    val inputStream = httpURLConnection.inputStream
-////                    val response = inputStream.bufferedReader().use { it.readText() }
-////                    Toast.makeText(this, response., Toast.LENGTH_SHORT).show()
-//                    // Parse the JSON response to a list of Income objects
-//                    // val incomes: List<Income> = parseJsonToIncomes(response)
-//                    // Update the RecyclerView on the UI thread
-////                    runOnUiThread {
-////                        incomeAdapter.updateData(incomes)
-////                    }
-//                } else {
-//                    runOnUiThread {
-//                        Toast.makeText(this, "Failed to fetch incomes", Toast.LENGTH_SHORT).show()
-//                    }
-//                }
-//
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//                runOnUiThread {
-//                    Toast.makeText(this, "Error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        }.start()
-//    }
 
     fun fetchAndDisplayIncome() {
         Thread {
             try {
                 val userId = 1 // Assuming a static user ID for demonstration
-                val url = URL("http://192.168.0.163:8080/api/v1/incomes/incomes?user_id=$userId")
+                //val url = URL("http://192.168.0.163:8080/api/v1/incomes/incomes?user_id=$userId")
+                val url = URL("$baseUrl/incomes/incomes?user_id=$userId")
                 val httpURLConnection = url.openConnection() as HttpURLConnection
                 httpURLConnection.requestMethod = "GET"
 
@@ -147,13 +108,6 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                         var id = jobject.getInt("id")
                         var income_name = jobject.getString("income_name")
                         var amount = jobject.getInt("amount")
-                        Log.e("user_id", income_name.toString())
-                        Log.e("user_id", income_name.toString())
-                        Log.e("user_id", income_name.toString())
-                        Log.e("income_name", income_name.toString())
-                        Log.e("income_name", income_name.toString())
-                        Log.e("user_id", income_name.toString())
-                        Log.e("amount", amount.toString())
                         incomes.add(Income(
                             IncomeName = income_name,
                             Amount = amount.toFloat(),
@@ -161,9 +115,6 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                             UserId = user_id
                         ))
                     }
-
-//                    val incomes = parseJsonToIncomes(response)
-
                     // Update the RecyclerView on the UI thread
                     runOnUiThread {
                         incomeAdapter.updateData(incomes)
@@ -182,40 +133,150 @@ class MainActivity : AppCompatActivity(), UIUpdater {
         }.start()
     }
 
-//    private fun <T> fromJson(json: String, typeToken: TypeToken<T>): T {
-//        val gson = Gson()
-//        return gson.fromJson(json, typeToken.type) // Use Gson's fromJson directly.
-//    }
-//
-//    private fun parseJsonToIncomes(json: String): List<Income> {
-//        return fromJson(json, object : TypeToken<List<Income>>() {})
-//    }
-
-//    private fun parseJsonToIncomes(response: String): List<Income> {
-//        val gson = Gson()
-//        val incomeListType = object : TypeToken<List<Income>>() {}.type
-//        return gson.fromJson(response, incomeListType)
-//    }
-
     fun fetchAndDisplaySavings() {
-        val savings = listOf<Savings>() // Replace with actual data fetch logic
-        runOnUiThread {
-            savingsAdapter.updateData(savings)
-        }
+        Thread {
+            try {
+                val userId = 1 // Assuming a static user ID for demonstration
+                //val url = URL("http://192.168.0.163:8080/api/v1/incomes/savings?user_id=$userId")
+                val url = URL("$baseUrl/savings/savings?user_id=$userId")
+
+                val httpURLConnection = url.openConnection() as HttpURLConnection
+                httpURLConnection.requestMethod = "GET"
+
+                val responseCode = httpURLConnection.responseCode
+
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    val inputStream = httpURLConnection.inputStream
+                    val response = inputStream.bufferedReader().use { it.readText() }
+
+                    val jArray = JSONArray(response.toString())
+                    val savings = mutableListOf<Savings>()
+                    for (i in 0..jArray.length()-1) {
+                        var jobject = jArray.getJSONObject(i)
+                        var user_id = jobject.getInt("user_id")
+                        var id = jobject.getInt("id")
+                        var savings_name = jobject.getString("savings_name")
+                        var amount = jobject.getInt("amount")
+                        var date = jobject.getString("date")
+                        savings.add(
+                            Savings(
+                                SavingsName = savings_name,
+                            Amount = amount.toFloat(),
+                            id = id,
+                            UserId = user_id,
+                                Date = date
+                            ))
+                    }
+                    // Update the RecyclerView on the UI thread
+                    runOnUiThread {
+                        savingsAdapter.updateData(savings)
+                    }
+                } else {
+                    runOnUiThread {
+                        Toast.makeText(this@MainActivity, "Failed to fetch savings", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                runOnUiThread {
+                    Toast.makeText(this@MainActivity, "Error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }.start()
     }
 
     fun fetchAndDisplayExpenseCategories() {
-        val expenseCategories = listOf<ExpenseCategory>() // Replace with actual data fetch logic
-        runOnUiThread {
-            categoryAdapter.updateCategories(expenseCategories)
-        }
+        Thread {
+            try {
+                val userId = 1 // Assuming a static user ID for demonstration
+                //val url = URL("http://192.168.0.163:8080/api/v1/expenses/categories?user_id=$userId")
+                val url = URL("$baseUrl/categories/expense-categories?user_id=$userId")
+
+                val httpURLConnection = url.openConnection() as HttpURLConnection
+                httpURLConnection.requestMethod = "GET"
+
+                val responseCode = httpURLConnection.responseCode
+
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    val inputStream = httpURLConnection.inputStream
+                    val response = inputStream.bufferedReader().use { it.readText() }
+
+                    val jArray = JSONArray(response.toString())
+                    val categories = mutableListOf<ExpenseCategory>()
+                    for (i in 0 until jArray.length()) {
+                        val jsonObject = jArray.getJSONObject(i)
+                        val id = jsonObject.getInt("id")
+                        var user_id = jsonObject.getInt("user_id")
+                        val categoryName = jsonObject.getString("category_name")
+                        val amount = jsonObject.getDouble("amount").toFloat()
+                        categories.add(ExpenseCategory(id = id,
+                            CategoryName = categoryName,
+                            UserId = user_id,
+                            Amount = amount))
+                    }
+                    runOnUiThread {
+                        categoryAdapter.updateCategories(categories)
+                    }
+                } else {
+                    runOnUiThread {
+                        Toast.makeText(this@MainActivity, "Failed to fetch categories", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                runOnUiThread {
+                    Toast.makeText(this@MainActivity, "Error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }.start()
     }
 
-    fun fetchExpensesForCategory(categoryId: Int): List<Expense> {
-        // Fetch expenses for the given category ID
-        // This is a placeholder; you'll need to replace it with actual fetch logic
-        return listOf() // Return fetched expenses
+
+    fun fetchExpensesForCategory(categoryId: Int, expenseAdapter: ExpenseAdapter) {
+        Thread {
+            try {
+                val url = URL("http://192.168.0.163:8080/api/v1/expenses?category_id=$categoryId")
+                val httpURLConnection = url.openConnection() as HttpURLConnection
+                httpURLConnection.requestMethod = "GET"
+
+                val responseCode = httpURLConnection.responseCode
+
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    val inputStream = httpURLConnection.inputStream
+                    val response = inputStream.bufferedReader().use { it.readText() }
+
+                    val jArray = JSONArray(response)
+                    val expenses = mutableListOf<Expense>()
+                    for (i in 0 until jArray.length()) {
+                        val jsonObject = jArray.getJSONObject(i)
+                        val id = jsonObject.getInt("id")
+                        val expenseName = jsonObject.getString("expense_name")
+                        val amount = jsonObject.getDouble("amount").toFloat()
+                        val date = jsonObject.getString("date")
+                        expenses.add(Expense(id = id,
+                            CategoryId = categoryId,
+                            ExpenseName = expenseName,
+                            Amount = amount,
+                            Date = date))
+                    }
+                    runOnUiThread {
+                        // Assuming there's a method to update expenses in your ExpenseCategoryAdapter
+                        expenseAdapter.updateExpenses(expenses)
+                    }
+                } else {
+                    runOnUiThread {
+                        Toast.makeText(this@MainActivity, "Failed to fetch expenses for category", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                runOnUiThread {
+                    Toast.makeText(this@MainActivity, "Error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }.start()
     }
+
 
     fun showIncomeDialog(income: Income?) {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.item_income, null)
@@ -255,6 +316,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
             .setNegativeButton("Cancel", null)
             .create()
         dialog.show()
+        fetchAndDisplaySavings()
     }
 
     fun showCategoryDialog(category: ExpenseCategory?) {
@@ -284,6 +346,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
             }
             .setNegativeButton("Cancel", null)
             .show()
+        fetchAndDisplayExpenseCategories()
     }
 
     fun showExpenseDialog(expense: Expense?) {
@@ -323,7 +386,3 @@ class MainActivity : AppCompatActivity(), UIUpdater {
         TODO("Not yet implemented")
     }
 }
-
-//private fun Any.fromJson(json: String, type: Type?): List<Income> {
-//
-//}
