@@ -1,108 +1,101 @@
 package com.example.myb
+import ExpenseNetworkManager
+import IncomeNetworkManager
+import SavingsNetworkManager
 import StatisticsFragment
+import android.content.Context
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
-import android.view.ViewGroup
 import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
-import androidx.room.Room
-import com.example.myb.dao.ExpenseCategoryDao
-import com.example.myb.dao.SavingsDao
-import com.example.myb.dao.UserDao
-import com.example.myb.database.AppDatabase
-import com.example.myb.model.Savings
-import com.example.myb.model.User
-import androidx.appcompat.app.AlertDialog
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import com.example.myb.dao.SavingsDao
+import com.example.myb.interfaces.UIUpdater
+import com.example.myb.model.Savings
+import com.example.myb.requests.ExpenseCategoryNetworkManager
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var db: AppDatabase
-    private lateinit var userDao: UserDao
-    private lateinit var savingsDao: SavingsDao
-    private lateinit var incomesDao: IncomeDao
-    private lateinit var expenseCategoriesDao: ExpenseCategoryDao
-    private lateinit var expensesDao: ExpenseDao
-    private lateinit var expenseCategoriesLayout: ViewGroup
+class MainActivity : AppCompatActivity(), UIUpdater {
+    private lateinit var expenseCategoryNetworkManager: ExpenseCategoryNetworkManager
+    private lateinit var expenseNetworkManager: ExpenseNetworkManager
+    private lateinit var savingsNetworkManager: SavingsNetworkManager
+    private lateinit var incomeNetworkManager: IncomeNetworkManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
-       // super.onCreate(savedInstanceState)
-       // setContentView(StatisticsFragment())
         super.onCreate(savedInstanceState)
-        supportFragmentManager.beginTransaction()
-            .replace(android.R.id.content, StatisticsFragment())
-            .commit()
+        setContentView(R.layout.activity_main)
 
+        expenseCategoryNetworkManager = ExpenseCategoryNetworkManager(this)
+        expenseNetworkManager = ExpenseNetworkManager(this)
+        savingsNetworkManager = SavingsNetworkManager(this)
+        incomeNetworkManager = IncomeNetworkManager(this)
 
-//        val isDeleted = applicationContext.deleteDatabase("MYB.db")
-//        Log.d("DatabaseDeleted", "Is database deleted? $isDeleted")
-//
-//        // Building the database
-//        db = Room.databaseBuilder(
-//            applicationContext,
-//            AppDatabase::class.java,
-//            "MYB.db"
-//        ).allowMainThreadQueries().build()
-//
-//        userDao = db.userDao()
-//        savingsDao = db.savingsDao()
-//        incomesDao = db.incomeDao()
-//        expenseCategoriesDao = db.expenseCategoryDao()
-//        expensesDao = db.expenseDao()
-//
-//        // Inserting entities
-//        for (i in 1..10) {
-//            userDao.insertAll(User(i, "User $i", 20 + i))
-//            val currentTime = System.currentTimeMillis() // Correct, currentTime is Long
-//            savingsDao.insertAll(Savings(i, "Savings $i", 500f + 10f * i, currentTime, i))
-//            incomesDao.insertAll(Income(i, "Income $i", 500f + 10f * i, i))
-//            expenseCategoriesDao.insertAll(ExpenseCategory(i, "Expense category $i", 500f + 10f * i, i))
-//            expensesDao.insertAll(Expense(i, "Expense $i", 500f + 10f * i, currentTime, i))
-//        }
-//
-//        // Retrieving and displaying entities
-//        val users = userDao.getAll()
-//        users.forEach {
-//            Log.d("User", it.toString())
-//        }
-//        val savings = savingsDao.getAll()
-//        savings.forEach {
-//            Log.d("Saving", it.toString())
-//        }
-//        val incomes = incomesDao.getAll()
-//        incomes.forEach {
-//            Log.d("Income", it.toString())
-//        }
-//        val expenseCategories = expenseCategoriesDao.getAll()
-//        expenseCategories.forEach {
-//            Log.d("Expense category", it.toString())
-//        }
-//        val expenses = expensesDao.getAll()
-//        expenses.forEach {
-//            Log.d("Expense", it.toString())
-//        }
-
-        val buttonAddIncome: Button = findViewById(R.id.addIncomeButton)
-        val buttonAddSavings: Button = findViewById(R.id.addPreservationButton)
-
-        // Set a click listener for the Add Income button
-        buttonAddIncome.setOnClickListener {
-            // Code to handle Add Income button click
-            // You might want to show a dialog or start a new activity to add income
-            showIncomeDialog()
-        }
-
-        // Set a click listener for the Add Savings button
-        buttonAddSavings.setOnClickListener {
-            // Code to handle Add Savings button click
-            // Similar to the Add Income, show a dialog or start a new activity to add savings
-            showSavingsDialog()
-        }
-
-
+        setupSavings()
+        setupIncome()
     }
+
+    private fun setupSavings() {
+        val btnCreateSavings: Button = findViewById(R.id.btnCreateSavings)
+        btnCreateSavings.setOnClickListener {
+            val savingsName = findViewById<EditText>(R.id.etSavingsName).text.toString()
+            val amount = findViewById<EditText>(R.id.etSavingsAmount).text.toString().toFloat()
+            val userId = 1  // Assuming a static user ID for demonstration
+
+            savingsNetworkManager.createSavings(savingsName, amount, userId)
+        }
+
+        val btnUpdateSavings: Button = findViewById(R.id.btnUpdateSavings)
+        btnUpdateSavings.setOnClickListener {
+            val savingsId = findViewById<EditText>(R.id.etSavingsId).text.toString().toInt()
+            val newName = findViewById<EditText>(R.id.etNewSavingsName).text.toString()
+            val newAmount = findViewById<EditText>(R.id.etNewSavingsAmount).text.toString().toFloat()
+
+            savingsNetworkManager.updateSavings(savingsId, newName, newAmount)
+        }
+
+        val btnDeleteSavings: Button = findViewById(R.id.btnDeleteSavings)
+        btnDeleteSavings.setOnClickListener {
+            val savingsId = findViewById<EditText>(R.id.etSavingsId).text.toString().toInt()
+            savingsNetworkManager.deleteSavings(savingsId)
+        }
+    }
+
+    private fun setupIncome() {
+        val btnCreateIncome: Button = findViewById(R.id.btnCreateIncome)
+        btnCreateIncome.setOnClickListener {
+            val incomeName = findViewById<EditText>(R.id.etIncomeName).text.toString()
+            val amount = findViewById<EditText>(R.id.etIncomeAmount).text.toString().toFloat()
+            val userId = 1  // Assuming a static user ID for demonstration
+
+            incomeNetworkManager.createIncome(incomeName, amount, userId)
+        }
+
+        val btnUpdateIncome: Button = findViewById(R.id.btnUpdateIncome)
+        btnUpdateIncome.setOnClickListener {
+            val incomeId = findViewById<EditText>(R.id.etIncomeId).text.toString().toInt()
+            val newName = findViewById<EditText>(R.id.etNewIncomeName).text.toString()
+            val newAmount = findViewById<EditText>(R.id.etNewIncomeAmount).text.toString().toFloat()
+
+            incomeNetworkManager.updateIncome(incomeId, newName, newAmount)
+        }
+
+        val btnDeleteIncome: Button = findViewById(R.id.btnDeleteIncome)
+        btnDeleteIncome.setOnClickListener {
+            val incomeId = findViewById<EditText>(R.id.etIncomeId).text.toString().toInt()
+            incomeNetworkManager.deleteIncome(incomeId)
+        }
+    }
+
+    override fun runOnUIThread(action: () -> Unit) {
+        runOnUiThread(action)
+    }
+
+    override fun getContext(): Context {
+        return this
+    }
+
     private fun showIncomeDialog(income: Income? = null) {
         val dialogView = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -212,5 +205,4 @@ class MainActivity : AppCompatActivity() {
             .setNegativeButton("Cancel", null)
             .show()
     }
-
 }

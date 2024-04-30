@@ -39,7 +39,7 @@ class LoginActivity : AppCompatActivity() {
         Thread {
             try {
                 // val url = URL("http://localhost:8080/login")
-                val url = URL("http://192.168.0.163:8080/api/v1/users/login")
+                val url = URL("http://192.168.0.76:8080/api/v1/users/login")
                 val httpURLConnection = url.openConnection() as HttpURLConnection
                 httpURLConnection.requestMethod = "POST"
                 httpURLConnection.doOutput = true

@@ -35,7 +35,7 @@ class SignupActivity : AppCompatActivity() {
     private fun performSignup(email: String, username: String, password: String) {
         Thread {
             try {
-                val url = URL("http://192.168.0.163:8080/api/v1/users/register")
+                val url = URL("http://192.168.0.76:8080/api/v1/users/register")
                 val httpURLConnection = url.openConnection() as HttpURLConnection
                 httpURLConnection.requestMethod = "POST"
                 httpURLConnection.doOutput = true

@@ -4,7 +4,7 @@ from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 from core.settings import database_url
 
 
-engine = create_engine(database_url, echo=True)
+engine = create_engine("mysql://root:1q2w3e4r@localhost:3306/myb_mobile", echo=True)
 Base = declarative_base()
 metadata = Base.metadata
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
