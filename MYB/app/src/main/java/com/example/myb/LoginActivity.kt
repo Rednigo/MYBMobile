@@ -1,5 +1,6 @@
 package com.example.myb
 
+import android.content.Intent
 import android.os.Bundle
 import android.provider.ContactsContract.CommonDataKinds.Website.URL
 import android.widget.Button
@@ -9,11 +10,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.myb.utils.ApiConfig
+import org.json.JSONObject
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
 
 class LoginActivity : AppCompatActivity() {
+    private val baseUrl = ApiConfig.BASE_URL
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_layout)
@@ -38,8 +43,7 @@ class LoginActivity : AppCompatActivity() {
         // Since network on main thread is not allowed, starting a new thread
         Thread {
             try {
-                // val url = URL("http://localhost:8080/login")
-                val url = URL("http://192.168.0.76:8080/api/v1/users/login")
+                val url = URL(baseUrl + "/users/login")
                 val httpURLConnection = url.openConnection() as HttpURLConnection
                 httpURLConnection.requestMethod = "POST"
                 httpURLConnection.doOutput = true
@@ -57,8 +61,20 @@ class LoginActivity : AppCompatActivity() {
 
                 runOnUiThread {
                     if (responseCode == HttpURLConnection.HTTP_OK) {
-                        // Handle success
-                        Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
+                        val inputStream = httpURLConnection.inputStream
+                        val response = inputStream.bufferedReader().use { it.readText() }
+                        val jsonResponse = JSONObject(response)
+
+                        // Assuming 'id' is the user ID
+                        val userId = jsonResponse.getInt("id")
+
+                        val mainPageIntent = Intent(this@LoginActivity, MainActivity::class.java)
+                        mainPageIntent.putExtra("USER_ID", userId)
+                        startActivity(mainPageIntent)
+//                        // Handle success
+////                        Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
+//                        val mainPageIntent = Intent(this, MainActivity::class.java)
+//                        startActivity(mainPageIntent, user_id)
                     } else {
                         // Handle error
                         Toast.makeText(this, "Login failed with response code $responseCode", Toast.LENGTH_SHORT).show()

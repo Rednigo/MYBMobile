@@ -6,7 +6,8 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class SavingsNetworkManager(private val uiUpdater: UIUpdater) {
-    private val baseUrl = "http://192.168.0.76:8080/api/v1/savings"
+    private val rootUrl = "http://192.168.0.163:8080/api/v1/"
+    private val baseUrl = rootUrl + "savings"
 
     fun fetchAllSavings() {
         Thread {

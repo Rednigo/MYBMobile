@@ -7,7 +7,8 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class ExpenseNetworkManager(private val uiUpdater: UIUpdater) {
-    private val baseUrl = "http://192.168.0.76:8080/api/v1/expenses"
+    private val rootUrl = "http://192.168.0.163:8080/api/v1/"
+    private val baseUrl = rootUrl + "expenses"
 
     interface ExpenseFetchListener {
         fun onExpensesFetched(expenses: List<Expense>)

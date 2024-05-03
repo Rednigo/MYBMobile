@@ -6,7 +6,8 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class IncomeNetworkManager(private val uiUpdater: UIUpdater) {
-    private val baseUrl = "http://192.168.0.76:8080/api/v1/incomes"
+    private val rootUrl = "http://192.168.0.163:8080/api/v1/"
+    private val baseUrl = rootUrl + "incomes"
 
     fun fetchAllIncomes() {
         Thread {

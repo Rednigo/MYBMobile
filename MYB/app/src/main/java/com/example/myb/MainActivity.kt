@@ -1,4 +1,6 @@
 package com.example.myb
+
+import com.example.myb.utils.ApiConfig
 import ExpenseAdapter
 import ExpenseCategoryAdapter
 import ExpenseNetworkManager
@@ -34,7 +36,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
     private lateinit var savingsAdapter: SavingsAdapter
     private lateinit var expenseAdapter: ExpenseAdapter
 
-    private val baseUrl = "http://192.168.0.76:8080/api/v1"
+    private val baseUrl = ApiConfig.BASE_URL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,7 +90,8 @@ class MainActivity : AppCompatActivity(), UIUpdater {
     fun fetchAndDisplayIncome() {
         Thread {
             try {
-                val userId = 1 // Assuming a static user ID for demonstration
+                //val userId = 1 // Assuming a static user ID for demonstration
+                val userId = intent.getIntExtra("USER_ID", -1)  // -1 as default if not found
                 //val url = URL("http://192.168.0.163:8080/api/v1/incomes/incomes?user_id=$userId")
                 val url = URL("$baseUrl/incomes/incomes?user_id=$userId")
                 val httpURLConnection = url.openConnection() as HttpURLConnection

@@ -7,7 +7,8 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class ExpenseCategoryNetworkManager(private val uiUpdater: UIUpdater) {
-    private val baseUrl = "http://192.168.0.76:8080/api/v1/categories"
+    private val rootUrl = "http://192.168.0.163:8080/api/v1/"
+    private val baseUrl = rootUrl + "categories"
 
     fun fetchExpenseCategories() {
         Thread {

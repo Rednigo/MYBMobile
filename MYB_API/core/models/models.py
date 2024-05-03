@@ -56,9 +56,8 @@ class ExpenseCategory(Base):
     amount = Column(Float, nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
 
-    # Relationships
-    user = relationship('User', back_populates='categories')  # Back-link to User
-    expenses = relationship('Expense', back_populates='category')  # Link to Expenses
+    user = relationship('User', back_populates='categories')
+    expenses = relationship('Expense', back_populates='category', cascade="all, delete-orphan")
 
 
 class Expense(Base):
@@ -67,7 +66,6 @@ class Expense(Base):
     expense_name = Column(String(255), nullable=False)
     amount = Column(Float, nullable=False)
     date = Column(DateTime, default=datetime.utcnow)
-    category_id = Column(Integer, ForeignKey('expense_category.id'), nullable=False)
+    category_id = Column(Integer, ForeignKey('expense_category.id', ondelete="CASCADE"))
 
-    # Relationship
-    category = relationship('ExpenseCategory', back_populates='expenses')  # Link to ExpenseCategory
+    category = relationship('ExpenseCategory', back_populates='expenses')
