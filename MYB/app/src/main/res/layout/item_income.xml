@@ -12,6 +12,12 @@
         android:layout_weight="1"
         android:text="Income Name" />
 
+    <TextView
+        android:id="@+id/amount_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$0.00" />
+
     <ImageButton
         android:id="@+id/edit_income_button"
         android:layout_width="wrap_content"
@@ -23,5 +29,4 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@android:drawable/ic_menu_delete" />
-
 </LinearLayout>

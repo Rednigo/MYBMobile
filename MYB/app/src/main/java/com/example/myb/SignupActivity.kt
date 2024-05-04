@@ -1,15 +1,19 @@
 package com.example.myb
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.myb.utils.ApiConfig
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
 
 class SignupActivity : AppCompatActivity() {
+    private val baseUrl = ApiConfig.BASE_URL
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.signup_layout)
@@ -35,7 +39,7 @@ class SignupActivity : AppCompatActivity() {
     private fun performSignup(email: String, username: String, password: String) {
         Thread {
             try {
-                val url = URL("http://192.168.0.163:8080/api/v1/users/register")
+                val url = URL(baseUrl + "/users/register")
                 val httpURLConnection = url.openConnection() as HttpURLConnection
                 httpURLConnection.requestMethod = "POST"
                 httpURLConnection.doOutput = true
@@ -59,6 +63,8 @@ class SignupActivity : AppCompatActivity() {
                 runOnUiThread {
                     if (responseCode == HttpURLConnection.HTTP_OK) {
                         Toast.makeText(this, "Signup successful!", Toast.LENGTH_SHORT).show()
+                        val loginPageIntent = Intent(this@SignupActivity, LoginActivity::class.java)
+                        startActivity(loginPageIntent)
                     } else {
                         Toast.makeText(this, "Signup failed with response code $responseCode", Toast.LENGTH_SHORT).show()
                     }
