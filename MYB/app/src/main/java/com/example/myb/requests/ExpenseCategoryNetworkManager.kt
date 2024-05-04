@@ -82,7 +82,7 @@ class ExpenseCategoryNetworkManager(private val uiUpdater: UIUpdater) {
     fun updateExpenseCategory(categoryId: Int, newName: String?, newAmount: Float?) {
         Thread {
             try {
-                val url = URL("$baseUrl/expense-categories/$categoryId")
+                val url = URL("$baseUrl/expense-categories?category_id=$categoryId")
                 val connection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "PUT"
                 connection.doOutput = true
@@ -122,7 +122,7 @@ class ExpenseCategoryNetworkManager(private val uiUpdater: UIUpdater) {
     fun deleteExpenseCategory(categoryId: Int) {
         Thread {
             try {
-                val url = URL("$baseUrl/expense-categories/$categoryId")
+                val url = URL("$baseUrl/expense-categories?category_id=$categoryId")
                 val connection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "DELETE"
 

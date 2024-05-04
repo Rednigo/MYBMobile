@@ -40,7 +40,7 @@ class IncomeNetworkManager(private val uiUpdater: UIUpdater) {
     fun createIncome(incomeName: String, amount: Float, userId: Int) {
         Thread {
             try {
-                val url = URL("$baseUrl/create")
+                val url = URL("$baseUrl/incomes")
                 val connection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "POST"
                 connection.doOutput = true
@@ -81,7 +81,7 @@ class IncomeNetworkManager(private val uiUpdater: UIUpdater) {
     fun updateIncome(incomeId: Int, newName: String?, newAmount: Float?) {
         Thread {
             try {
-                val url = URL("$baseUrl/update/$incomeId")
+                val url = URL("$baseUrl/incomes?income_id=$incomeId")
                 val connection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "PUT"
                 connection.doOutput = true
@@ -121,7 +121,7 @@ class IncomeNetworkManager(private val uiUpdater: UIUpdater) {
     fun deleteIncome(incomeId: Int) {
         Thread {
             try {
-                val url = URL("$baseUrl/delete/$incomeId")
+                val url = URL("$baseUrl/incomes?income_id=$incomeId")
                 val connection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "DELETE"
 

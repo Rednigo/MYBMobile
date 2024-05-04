@@ -292,8 +292,10 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                 val amount = amountInput.text.toString().toFloatOrNull() ?: 0f
                 if (income == null) {
                     incomeNetworkManager.createIncome(name, amount, 1) // Assuming a static user ID for demonstration
+                    fetchAndDisplayIncome()
                 } else {
                     incomeNetworkManager.updateIncome(income.id, name, amount)
+                    fetchAndDisplayIncome()
                 }
             }
             .setNegativeButton("Cancel", null)
@@ -311,15 +313,18 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                 val name = nameInput.text.toString()
                 val amount = amountInput.text.toString().toFloatOrNull() ?: 0f
                 if (savings == null) {
-                    savingsNetworkManager.createSavings(name, amount, 1) // Assuming a static user ID for demonstration
+                    savingsNetworkManager.createSavings(name, amount, 1)
+                    fetchAndDisplaySavings()
+                // Assuming a static user ID for demonstration
                 } else {
                     savingsNetworkManager.updateSavings(savings.id, name, amount)
+                    fetchAndDisplaySavings()
                 }
             }
             .setNegativeButton("Cancel", null)
             .create()
         dialog.show()
-        fetchAndDisplaySavings()
+
     }
 
     fun showCategoryDialog(category: ExpenseCategory?) {
@@ -341,15 +346,17 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                 val budget = categoryBudgetInput.text.toString().toFloatOrNull() ?: 0f
                 if (category == null) {
                     expenseCategoryNetworkManager.createExpenseCategory(name, budget, 1) // Assume UserId is 1
+                    fetchAndDisplayExpenseCategories()
                 } else {
                     category.CategoryName = name
                     category.Amount = budget
                     expenseCategoryNetworkManager.updateExpenseCategory(category.id, name, budget)
+                    fetchAndDisplayExpenseCategories()
                 }
             }
             .setNegativeButton("Cancel", null)
             .show()
-        fetchAndDisplayExpenseCategories()
+
     }
 
     fun showExpenseDialog(expense: Expense?) {
@@ -368,7 +375,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                 val name = nameInput.text.toString()
                 val amount = amountInput.text.toString().toFloat()
                 if (expense == null) {
-                    expenseNetworkManager.createExpense(name, amount, System.currentTimeMillis(), 1) // Assume CategoryId is 1
+                    expenseNetworkManager.createExpense(name, amount, System.currentTimeMillis(), 1)
                 } else {
                     expenseNetworkManager.updateExpense(expense.id, name, amount, System.currentTimeMillis())
                 }

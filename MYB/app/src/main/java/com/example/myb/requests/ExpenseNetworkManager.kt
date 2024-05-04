@@ -46,7 +46,7 @@ class ExpenseNetworkManager(private val uiUpdater: UIUpdater) {
     fun fetchExpensesByCategoryId(categoryId: Int) {
         Thread {
             try {
-                val url = URL("$baseUrl/category/$categoryId")
+                val url = URL("$baseUrl/category?category_id=$categoryId")
                 val connection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "GET"
 
@@ -76,7 +76,7 @@ class ExpenseNetworkManager(private val uiUpdater: UIUpdater) {
     fun createExpense(expenseName: String, amount: Float, date: Long, categoryId: Int) {
         Thread {
             try {
-                val url = URL("$baseUrl/create")
+                val url = URL("$baseUrl/expenses")
                 val connection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "POST"
                 connection.doOutput = true
@@ -118,7 +118,7 @@ class ExpenseNetworkManager(private val uiUpdater: UIUpdater) {
     fun updateExpense(expenseId: Int, newName: String?, newAmount: Float?, newDate: Long?) {
         Thread {
             try {
-                val url = URL("$baseUrl/update/$expenseId")
+                val url = URL("$baseUrl/expenses?expense_id$expenseId")
                 val connection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "PUT"
                 connection.doOutput = true
@@ -159,7 +159,7 @@ class ExpenseNetworkManager(private val uiUpdater: UIUpdater) {
     fun deleteExpense(expenseId: Int) {
         Thread {
             try {
-                val url = URL("$baseUrl/delete/$expenseId")
+                val url = URL("$baseUrl/expenses?expense_id=$expenseId")
                 val connection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "DELETE"
 
