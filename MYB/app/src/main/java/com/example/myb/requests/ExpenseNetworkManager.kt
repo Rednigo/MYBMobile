@@ -1,77 +1,14 @@
 
 import android.widget.Toast
-import com.example.myb.Expense
 import com.example.myb.interfaces.UIUpdater
+import com.example.myb.utils.ApiConfig
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
 
 class ExpenseNetworkManager(private val uiUpdater: UIUpdater) {
-    private val rootUrl = "http://192.168.0.163:8080/api/v1/"
-    private val baseUrl = rootUrl + "expenses"
+    private val baseUrl = ApiConfig.BASE_URL + "/expenses"
 
-    interface ExpenseFetchListener {
-        fun onExpensesFetched(expenses: List<Expense>)
-        fun onError(message: String)
-    }
-
-    fun fetchAllExpenses() {
-        Thread {
-            try {
-                val url = URL(baseUrl)
-                val connection = url.openConnection() as HttpURLConnection
-                connection.requestMethod = "GET"
-
-                val responseCode = connection.responseCode
-                val response = connection.inputStream.bufferedReader().use { it.readText() }
-
-                uiUpdater.runOnUIThread {
-                    val context = uiUpdater.getContext()
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        // Parse response and update UI
-                    } else {
-                        Toast.makeText(context, "Failed to fetch expenses: $responseCode", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                uiUpdater.runOnUIThread {
-                    val context = uiUpdater.getContext()
-                    Toast.makeText(context, "Failed to fetch expenses: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }.start()
-    }
-
-    fun fetchExpensesByCategoryId(categoryId: Int) {
-        Thread {
-            try {
-                val url = URL("$baseUrl/category?category_id=$categoryId")
-                val connection = url.openConnection() as HttpURLConnection
-                connection.requestMethod = "GET"
-
-                val responseCode = connection.responseCode
-                val response = connection.inputStream.bufferedReader().use { it.readText() }  // Assuming the response is JSON
-
-                uiUpdater.runOnUIThread {
-                    val context = uiUpdater.getContext()
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        // Parse response and update UI
-                        // Here you would typically convert the JSON response to model objects
-                        // For example, using Gson or Moshi to parse the JSON into a list of Expense objects
-                    } else {
-                        Toast.makeText(context, "Failed to fetch expenses for category: $responseCode", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                uiUpdater.runOnUIThread {
-                    val context = uiUpdater.getContext()
-                    Toast.makeText(context, "Failed to fetch expenses for category: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }.start()
-    }
 
     fun createExpense(expenseName: String, amount: Float, date: Long, categoryId: Int) {
         Thread {

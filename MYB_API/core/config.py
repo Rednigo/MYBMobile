@@ -11,7 +11,7 @@ DB_USER = os.getenv("DB_USER", "root")
 DB_PASS = os.getenv("DB_PASS", "1q2w3e4r")
 
 # API CONFIGURATION
-SERVER_HOST = os.getenv("SERVER_HOST", "192.168.0.163")
+SERVER_HOST = os.getenv("SERVER_HOST", "192.168.0.76")
 SERVER_PORT = int(os.getenv("SERVER_PORT", 8080))
 LOG_LEVEL = os.getenv("LOG_LEVEL", "info")
 DEBUG_RELOAD = bool(os.getenv("DEBUG_RELOAD", True))

@@ -1,41 +1,13 @@
 
 import android.widget.Toast
 import com.example.myb.interfaces.UIUpdater
+import com.example.myb.utils.ApiConfig
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
 
 class SavingsNetworkManager(private val uiUpdater: UIUpdater) {
-    private val rootUrl = "http://192.168.0.163:8080/api/v1/"
-    private val baseUrl = rootUrl + "savings"
-
-    fun fetchAllSavings() {
-        Thread {
-            try {
-                val url = URL(baseUrl)
-                val connection = url.openConnection() as HttpURLConnection
-                connection.requestMethod = "GET"
-
-                val responseCode = connection.responseCode
-                val response = connection.inputStream.bufferedReader().use { it.readText() }
-
-                uiUpdater.runOnUIThread {
-                    val context = uiUpdater.getContext()
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        // Parse response and update UI
-                    } else {
-                        Toast.makeText(context, "Failed to fetch savings: $responseCode", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                uiUpdater.runOnUIThread {
-                    val context = uiUpdater.getContext()
-                    Toast.makeText(context, "Failed to fetch savings: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }.start()
-    }
+    private val baseUrl = ApiConfig.BASE_URL + "/savings"
 
     fun createSavings(savingsName: String, amount: Float, userId: Int) {
         Thread {

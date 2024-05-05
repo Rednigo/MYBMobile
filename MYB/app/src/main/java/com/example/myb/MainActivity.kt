@@ -1,6 +1,5 @@
 package com.example.myb
 
-import com.example.myb.utils.ApiConfig
 import ExpenseAdapter
 import ExpenseCategoryAdapter
 import ExpenseNetworkManager
@@ -9,6 +8,7 @@ import IncomeNetworkManager
 import SavingsAdapter
 import SavingsNetworkManager
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.Button
@@ -21,11 +21,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myb.interfaces.UIUpdater
 import com.example.myb.model.Savings
 import com.example.myb.requests.ExpenseCategoryNetworkManager
+import com.example.myb.utils.ApiConfig
 import org.json.JSONArray
 import java.net.HttpURLConnection
 import java.net.URL
 
 class MainActivity : AppCompatActivity(), UIUpdater {
+    private lateinit var sharedPreferences: SharedPreferences
+    private val PREF_FILE = ApiConfig.PREF_FILE
+
     lateinit var expenseCategoryNetworkManager: ExpenseCategoryNetworkManager
     lateinit var expenseNetworkManager: ExpenseNetworkManager
     lateinit var savingsNetworkManager: SavingsNetworkManager
@@ -47,12 +51,18 @@ class MainActivity : AppCompatActivity(), UIUpdater {
         savingsNetworkManager = SavingsNetworkManager(this)
         incomeNetworkManager = IncomeNetworkManager(this)
 
+        sharedPreferences = getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
+
         setupRecyclerViews()
         setupButtons()
 
         fetchAndDisplayIncome()
         fetchAndDisplaySavings()
         fetchAndDisplayExpenseCategories()
+    }
+
+    private fun getUserId(): Int {
+        return sharedPreferences.getInt("USER_ID", -1) // -1 as default if not found
     }
 
     private fun setupRecyclerViews() {
@@ -90,9 +100,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
     fun fetchAndDisplayIncome() {
         Thread {
             try {
-                //val userId = 1 // Assuming a static user ID for demonstration
-                val userId = intent.getIntExtra("USER_ID", -1)  // -1 as default if not found
-                //val url = URL("http://192.168.0.163:8080/api/v1/incomes/incomes?user_id=$userId")
+                val userId = getUserId()
                 val url = URL("$baseUrl/incomes/incomes?user_id=$userId")
                 val httpURLConnection = url.openConnection() as HttpURLConnection
                 httpURLConnection.requestMethod = "GET"
@@ -107,7 +115,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                     val incomes = mutableListOf<Income>()
                     for (i in 0..jArray.length()-1) {
                         var jobject = jArray.getJSONObject(i)
-                        var user_id = jobject.getInt("user_id")
+                        var user_id = userId
                         var id = jobject.getInt("id")
                         var income_name = jobject.getString("income_name")
                         var amount = jobject.getInt("amount")
@@ -139,8 +147,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
     fun fetchAndDisplaySavings() {
         Thread {
             try {
-                val userId = 1 // Assuming a static user ID for demonstration
-                //val url = URL("http://192.168.0.163:8080/api/v1/incomes/savings?user_id=$userId")
+                val userId = getUserId()
                 val url = URL("$baseUrl/savings/savings?user_id=$userId")
 
                 val httpURLConnection = url.openConnection() as HttpURLConnection
@@ -156,7 +163,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                     val savings = mutableListOf<Savings>()
                     for (i in 0..jArray.length()-1) {
                         var jobject = jArray.getJSONObject(i)
-                        var user_id = jobject.getInt("user_id")
+                        var user_id = userId
                         var id = jobject.getInt("id")
                         var savings_name = jobject.getString("savings_name")
                         var amount = jobject.getInt("amount")
@@ -164,9 +171,9 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                         savings.add(
                             Savings(
                                 SavingsName = savings_name,
-                            Amount = amount.toFloat(),
-                            id = id,
-                            UserId = user_id,
+                                Amount = amount.toFloat(),
+                                id = id,
+                                UserId = user_id,
                                 Date = date
                             ))
                     }
@@ -191,8 +198,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
     fun fetchAndDisplayExpenseCategories() {
         Thread {
             try {
-                val userId = 1 // Assuming a static user ID for demonstration
-                //val url = URL("http://192.168.0.163:8080/api/v1/expenses/categories?user_id=$userId")
+                val userId = getUserId()
                 val url = URL("$baseUrl/categories/expense-categories?user_id=$userId")
 
                 val httpURLConnection = url.openConnection() as HttpURLConnection
@@ -209,7 +215,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                     for (i in 0 until jArray.length()) {
                         val jsonObject = jArray.getJSONObject(i)
                         val id = jsonObject.getInt("id")
-                        var user_id = jsonObject.getInt("user_id")
+                        var user_id = userId
                         val categoryName = jsonObject.getString("category_name")
                         val amount = jsonObject.getDouble("amount").toFloat()
                         categories.add(ExpenseCategory(id = id,
@@ -238,7 +244,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
     fun fetchExpensesForCategory(categoryId: Int, expenseAdapter: ExpenseAdapter) {
         Thread {
             try {
-                val url = URL("http://192.168.0.163:8080/api/v1/expenses?category_id=$categoryId")
+                val url = URL("$baseUrl/expenses/expenses?expense_id=$categoryId")
                 val httpURLConnection = url.openConnection() as HttpURLConnection
                 httpURLConnection.requestMethod = "GET"
 
@@ -291,12 +297,13 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                 val name = nameInput.text.toString()
                 val amount = amountInput.text.toString().toFloatOrNull() ?: 0f
                 if (income == null) {
-                    incomeNetworkManager.createIncome(name, amount, 1) // Assuming a static user ID for demonstration
+                    incomeNetworkManager.createIncome(name, amount, getUserId()) // Assuming a static user ID for demonstration
                     fetchAndDisplayIncome()
                 } else {
                     incomeNetworkManager.updateIncome(income.id, name, amount)
                     fetchAndDisplayIncome()
                 }
+                fetchAndDisplayIncome()
             }
             .setNegativeButton("Cancel", null)
             .create()
@@ -313,9 +320,9 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                 val name = nameInput.text.toString()
                 val amount = amountInput.text.toString().toFloatOrNull() ?: 0f
                 if (savings == null) {
-                    savingsNetworkManager.createSavings(name, amount, 1)
+                    savingsNetworkManager.createSavings(name, amount, getUserId())
                     fetchAndDisplaySavings()
-                // Assuming a static user ID for demonstration
+                    // Assuming a static user ID for demonstration
                 } else {
                     savingsNetworkManager.updateSavings(savings.id, name, amount)
                     fetchAndDisplaySavings()
@@ -345,7 +352,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                 val name = categoryNameInput.text.toString()
                 val budget = categoryBudgetInput.text.toString().toFloatOrNull() ?: 0f
                 if (category == null) {
-                    expenseCategoryNetworkManager.createExpenseCategory(name, budget, 1) // Assume UserId is 1
+                    expenseCategoryNetworkManager.createExpenseCategory(name, budget, getUserId()) // Assume UserId is 1
                     fetchAndDisplayExpenseCategories()
                 } else {
                     category.CategoryName = name
