@@ -74,6 +74,12 @@ class MainActivity : AppCompatActivity(), UIUpdater {
         incomeNetworkManager = IncomeNetworkManager(this)
 
         sharedPreferences = getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
+        if (getUserLanguage() == "uk") {
+            setContentView(R.layout.activity_main_uk)
+        }
+        else {
+            setContentView(R.layout.activity_main)
+        }
 
         setupRecyclerViews()
         setupButtons()
@@ -160,6 +166,10 @@ class MainActivity : AppCompatActivity(), UIUpdater {
 
     private fun getUserId(): Int {
         return sharedPreferences.getInt("USER_ID", -1) // -1 as default if not found
+    }
+
+    private fun getUserLanguage(): String? {
+        return sharedPreferences.getString("LANG", "en") // -1 as default if not found
     }
 
     private fun setupRecyclerViews() {

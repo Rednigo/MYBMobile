@@ -59,10 +59,12 @@ class LoginActivity : AppCompatActivity() {
                     val response = inputStream.bufferedReader().use { it.readText() }
                     val jsonResponse = JSONObject(response)
                     val userId = jsonResponse.getInt("id")
+                    val userLang = jsonResponse.getString("language")
 
                     val sharedPrefs = getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
                     sharedPrefs.edit().apply {
                         putInt("USER_ID", userId)
+                        putString("LANG", userLang)
                         apply()
                     }
 
