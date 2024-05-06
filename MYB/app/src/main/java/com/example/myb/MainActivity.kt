@@ -2,19 +2,19 @@ package com.example.myb
 
 
 
-import android.os.Bundle
 //import android.text.InputType
 //import android.view.ViewGroup
-import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
 //import com.example.myb.dao.ExpenseCategoryDao
 //import com.example.myb.dao.SavingsDao
 //import com.example.myb.dao.UserDao
 //import com.example.myb.database.AppDatabase
-import com.example.myb.model.Savings
-import androidx.appcompat.app.AlertDialog
 
 
+//import android.os.Bundle
+//import android.widget.Button
+//import androidx.appcompat.app.AlertDialog
+//import androidx.appcompat.app.AppCompatActivity
+//import com.example.myb.model.Savings
 import ExpenseAdapter
 import ExpenseCategoryAdapter
 import ExpenseNetworkManager
@@ -25,23 +25,22 @@ import SavingsNetworkManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-//import android.os.Bundle
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-//import android.widget.Button
+import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.Toast
-//import androidx.appcompat.app.AlertDialog
-//import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myb.interfaces.UIUpdater
-//import com.example.myb.model.Savings
+import com.example.myb.model.Savings
 import com.example.myb.requests.ExpenseCategoryNetworkManager
 import com.example.myb.utils.ApiConfig
 import org.json.JSONArray
@@ -345,7 +344,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
         Thread {
             try {
                 // Ensure the endpoint is correct and that it uses `category_id` as the query parameter
-                val url = URL("$baseUrl/expenses?category_id=$categoryId")
+                val url = URL("$baseUrl/expenses/expenses?category_id=$categoryId")
                 val httpURLConnection = url.openConnection() as HttpURLConnection
                 httpURLConnection.requestMethod = "GET"
 
