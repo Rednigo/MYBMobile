@@ -3,9 +3,7 @@ from sqlalchemy import func, extract
 from sqlalchemy.orm import Session
 from core.models.models import Income, Expense, Savings, User, ExpenseCategory
 
-
-def get_financial_summary(user_id: int, db: Session):
-    # Find the earliest date among income, expense, and savings for the given user
+def get_statistic(user_id: int, db: Session):
     user = db.query(User).get(user_id)
     if not user:
         return {
@@ -13,12 +11,10 @@ def get_financial_summary(user_id: int, db: Session):
             "incomes": [],
             "expenses": [],
             "saved": []
-        }  # Return empty if user does not exist
+        }
 
     earliest_income = db.query(func.min(Income.date)).filter(Income.user_id == user_id).scalar()
     earliest_savings = db.query(func.min(Savings.date)).filter(Savings.user_id == user_id).scalar()
-
-    # Fetch all category IDs for the user
     category_ids = [category.id for category in db.query(ExpenseCategory.id).filter(ExpenseCategory.user_id == user_id).all()]
     earliest_expense = db.query(func.min(Expense.date)).filter(Expense.category_id.in_(category_ids)).scalar()
 
@@ -32,13 +28,13 @@ def get_financial_summary(user_id: int, db: Session):
     }
 
     if start_date is None:
-        return financial_data  # No data available
+        return financial_data
 
     current_date = datetime.utcnow()
     while start_date <= current_date:
+        month_name = start_date.strftime("%b, %Y")  # Formats date as 'Month abbreviation, Year'
         year, month = start_date.year, start_date.month
 
-        # Calculate totals for the month for this user
         monthly_income = db.query(func.sum(Income.amount)).filter(
             Income.user_id == user_id,
             extract('year', Income.date) == year,
@@ -57,7 +53,7 @@ def get_financial_summary(user_id: int, db: Session):
             extract('month', Savings.date) == month
         ).scalar() or 0
 
-        financial_data['months'].append(f"{year}-{month:02d}")
+        financial_data['months'].append(month_name)
         financial_data['incomes'].append(float(monthly_income))
         financial_data['expenses'].append(float(monthly_expenses))
         financial_data['saved'].append(float(monthly_income - monthly_expenses - monthly_savings))
