@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <LinearLayout
+                android:id="@+id/customHeaderLayout"
+                android:layout_width="match_parent"
+                android:layout_height="74dp"
+                android:background="#9F2424"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/headerTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="MYB"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp" />
+
+                <Spinner
+                    android:id="@+id/dropdownSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="15dp"
+                    android:layout_weight="0"
+                    android:entries="@array/view_types"
+                    android:textColor="#808080" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Income Section -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    card_view:cardElevation="4dp"
+                    card_view:cardCornerRadius="4dp"
+                    >
+                    <!-- No ScrollView here, the content will expand -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="8dp"
+                        android:background="@drawable/cardview_border">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Доходи"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/incomeRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="+ додати дохід"
+                            android:id="@+id/addIncomeButton"
+                            android:background="@drawable/button_transparent"
+                            android:textColor="@android:color/black"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Preservations Section -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    card_view:cardElevation="4dp"
+                    card_view:cardCornerRadius="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="8dp"
+                        android:background="@drawable/cardview_border">>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Збереження"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/savingsRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <!-- Dynamic list for Savings items -->
+
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="+ додати збереження"
+                            android:id="@+id/addSavingButton"
+                            android:background="@drawable/button_transparent"
+                            android:textColor="@android:color/black"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Expense Categories Section -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    card_view:cardElevation="4dp"
+                    card_view:cardCornerRadius="4dp"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="8dp"
+                        android:background="@drawable/cardview_border">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Категорії витрат"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/expenseCategoryRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="+ додати категорію"
+                            android:id="@+id/addExpenseCategoryButton"
+                            android:background="@drawable/button_transparent"
+                            android:textColor="@android:color/black"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Add Category Button -->
+                <!--            <Button-->
+                <!--                android:layout_width="match_parent"-->
+                <!--                android:layout_height="wrap_content"-->
+                <!--                android:text="+ add category"-->
+                <!--                android:id="@+id/addCategoryButton"-->
+                <!--                android:background="@drawable/button_transparent"-->
+                <!--                android:textColor="@android:color/black"-->
+                <!--                android:gravity="start|center_vertical"-->
+                <!--                android:paddingStart="16dp"-->
+                <!--                android:paddingEnd="16dp"-->
+                <!--                android:layout_marginTop="16dp" />-->
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</RelativeLayout>
