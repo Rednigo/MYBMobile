@@ -71,6 +71,11 @@ class ExpenseCategoryAdapter(
         notifyDataSetChanged()
     }
 
+    fun notifyChanges()
+    {
+        notifyDataSetChanged()
+    }
+
     fun addCategory(category: ExpenseCategory) {
         categories.add(category)
         notifyItemInserted(categories.size - 1)

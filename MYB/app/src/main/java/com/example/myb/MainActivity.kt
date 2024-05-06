@@ -182,6 +182,8 @@ class MainActivity : AppCompatActivity(), UIUpdater {
             }
         })
 
+
+
         val categoryRecyclerView = findViewById<RecyclerView>(R.id.expenseCategoryRecyclerView)
         categoryAdapter = ExpenseCategoryAdapter(mutableListOf(), this) { categoryId, expenseAdapter ->
             fetchExpensesForCategory(categoryId, expenseAdapter)
@@ -603,6 +605,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                                 )
                                 runOnUiThread {
                                     expenseAdapter.addExpense(newExpense)
+                                    categoryAdapter.notifyChanges()
                                 }
                             },
                             onFailure = { exception ->
@@ -623,6 +626,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                                 Date = expense.Date,
                                 CategoryId = expense.CategoryId))
                     }
+                    categoryAdapter.notifyChanges()
                 }
             }
             .setNegativeButton("Cancel", null)
