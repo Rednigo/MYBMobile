@@ -33,11 +33,11 @@ def get_savings_by_id_endpoint(savings_id: int, db: Session = Depends(get_db)):
     return savings
 
 
-@router.put("/savings/{savings_id}", response_model=SavingsSchema)
+@router.put("/savings", response_model=SavingsSchema)
 def update_savings_endpoint(savings_id: int, savings: SavingsUpdateSchema, db: Session = Depends(get_db)):
     return update_savings(db=db, savings_id=savings_id, savings=savings)
 
 
-@router.delete("/savings/{savings_id}", response_model=SavingsSchema)
+@router.delete("/savings/", response_model=SavingsSchema)
 def delete_savings_endpoint(savings_id: int, db: Session = Depends(get_db)):
     return delete_savings(db=db, savings_id=savings_id)

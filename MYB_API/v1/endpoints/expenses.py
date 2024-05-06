@@ -33,11 +33,11 @@ def get_expense_by_id_endpoint(expense_id: int, db: Session = Depends(get_db)):
     return expense
 
 
-@router.put("/expenses/{expense_id}", response_model=ExpenseSchema)
+@router.put("/expenses", response_model=ExpenseSchema)
 def update_expense_endpoint(expense_id: int, expense: ExpenseUpdateSchema, db: Session = Depends(get_db)):
     return update_expense(db=db, expense_id=expense_id, expense=expense)
 
 
-@router.delete("/expenses/{expense_id}", response_model=ExpenseSchema)
+@router.delete("/expenses", response_model=ExpenseSchema)
 def delete_expense_endpoint(expense_id: int, db: Session = Depends(get_db)):
     return delete_expense(db=db, expense_id=expense_id)

@@ -20,7 +20,7 @@ class SavingsNetworkManager(private val uiUpdater: UIUpdater) {
 
                 val postData = """
                     {
-                        "name": "$savingsName",
+                        "savings_name": "$savingsName",
                         "amount": $amount,
                         "user_id": $userId
                     }
@@ -61,7 +61,7 @@ class SavingsNetworkManager(private val uiUpdater: UIUpdater) {
 
                 val updatedData = """
                     {
-                        "name": "${newName ?: ""}",
+                        "savings_name": "${newName ?: ""}",
                         "amount": ${newAmount ?: "null"}
                     }
                 """.trimIndent()

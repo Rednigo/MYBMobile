@@ -32,11 +32,11 @@ def get_income_by_id_endpoint(income_id: int, db: Session = Depends(get_db)):
     return income
 
 
-@router.put("/incomes/{income_id}", response_model=IncomeSchema)
+@router.put("/incomes", response_model=IncomeSchema)
 def update_income_endpoint(income_id: int, income: IncomeUpdateSchema, db: Session = Depends(get_db)):
     return update_income(db=db, income_id=income_id, income=income)
 
 
-@router.delete("/incomes/{income_id}", response_model=IncomeSchema)
+@router.delete("/incomes", response_model=IncomeSchema)
 def delete_income_endpoint(income_id: int, db: Session = Depends(get_db)):
     return delete_income(db=db, income_id=income_id)
