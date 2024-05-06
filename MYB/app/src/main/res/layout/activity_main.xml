@@ -5,16 +5,15 @@
     android:layout_height="match_parent"
     android:background="#F5F5F5">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
-
 
             <!-- MYB Header -->
             <TextView
@@ -34,21 +33,24 @@
                 android:layout_marginTop="16dp"
                 card_view:cardElevation="4dp"
                 card_view:cardCornerRadius="4dp">
-
+                <!-- No ScrollView here, the content will expand -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="8dp"
-                    android:background="@drawable/cardview_border">>
+                    android:background="@drawable/cardview_border">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Income"
+                        android:text="Incomes"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-                    <!-- Dynamic list for Income items -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/incomeRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
                     <Button
                         android:layout_width="match_parent"
@@ -81,16 +83,21 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Preservations"
+                        android:text="Savings"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-                    <!-- Dynamic list for Preservations items -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/savingsRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <!-- Dynamic list for Savings items -->
 
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="+ add preservation"
-                        android:id="@+id/addPreservationButton"
+                        android:text="+ add saving"
+                        android:id="@+id/addSavingButton"
                         android:background="@drawable/button_transparent"
                         android:textColor="@android:color/black"
                         android:gravity="start|center_vertical"
@@ -99,7 +106,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Expenses Section -->
+            <!-- Expense Categories Section -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -112,21 +119,24 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="8dp"
-                    android:background="@drawable/cardview_border">>
+                    android:background="@drawable/cardview_border">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Expenses"
+                        android:text="Expense Categories"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-                    <!-- Dynamic list for Expenses items -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/expenseCategoryRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="+ add an expense"
-                        android:id="@+id/addExpenseButton"
+                        android:text="+ add category"
+                        android:id="@+id/addExpenseCategoryButton"
                         android:background="@drawable/button_transparent"
                         android:textColor="@android:color/black"
                         android:gravity="start|center_vertical"
@@ -136,17 +146,17 @@
             </androidx.cardview.widget.CardView>
 
             <!-- Add Category Button -->
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="+ add category"
-                android:id="@+id/addCategoryButton"
-                android:background="@drawable/button_transparent"
-                android:textColor="@android:color/black"
-                android:gravity="start|center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:layout_marginTop="16dp" />
+<!--            <Button-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="+ add category"-->
+<!--                android:id="@+id/addCategoryButton"-->
+<!--                android:background="@drawable/button_transparent"-->
+<!--                android:textColor="@android:color/black"-->
+<!--                android:gravity="start|center_vertical"-->
+<!--                android:paddingStart="16dp"-->
+<!--                android:paddingEnd="16dp"-->
+<!--                android:layout_marginTop="16dp" />-->
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </RelativeLayout>

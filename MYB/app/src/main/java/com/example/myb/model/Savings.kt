@@ -13,6 +13,6 @@ data class Savings(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val SavingsName: String,
     val Amount: Float,
-    val Date: Long,
+    val Date: String,
     val UserId: Int
 )

@@ -13,6 +13,6 @@ data class Expense(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val ExpenseName: String,
     val Amount: Float,
-    val Date: Long,
+    val Date: String,
     val CategoryId: Int
 )
