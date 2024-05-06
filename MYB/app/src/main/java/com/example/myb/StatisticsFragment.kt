@@ -1,10 +1,10 @@
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.myb.R
 
@@ -13,7 +13,7 @@ class StatisticsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Задаємо макет фрагмента
-        val rootView = inflater.inflate(R.layout.fragment_statistics, container, false)
+        val rootView = inflater.inflate(R.layout.activity_statistics, container, false)
 
         // Отримуємо рідну ViewGroup, в яку будемо додавати рядки
         val tableLayout = rootView.findViewById<LinearLayout>(R.id.statistics_table_id)
@@ -47,6 +47,14 @@ class StatisticsFragment : Fragment() {
             // Додаємо рядок у загальну таблицю
             tableLayout.addView(rowView)
         }
+
+// Додаємо лінію в кінці таблиці
+        val lineView = View(requireContext())
+        val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 5) // висота лінії
+        params.setMargins(0, 25, 0, 0) // встановлюємо відступи вгорі
+        lineView.layoutParams = params
+        lineView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.table_color)) // колір лінії
+        tableLayout.addView(lineView)
 
         // Повертаємо кореневий макет фрагмента
         return rootView
