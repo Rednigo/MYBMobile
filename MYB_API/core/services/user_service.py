@@ -21,6 +21,7 @@ def create_user(db: Session, user_data: UserCreateSchema):
         username=user_data.username,
         email=user_data.email,
         hashed_password=hashed_password,
+        is_light_theme=True
     )
 
     # Save the new user to the database
