@@ -5,7 +5,7 @@ from core.repositories.user_repository import db_get_user_by_username
 from core.security.password_check import verify_password
 from fastapi import APIRouter, Depends, HTTPException
 
-from core.services.statistic_service import get_financial_summary
+from core.services.statistic_service import get_statistic
 from core.services.user_service import create_user, update_user_settings, get_user_by_id
 
 router = APIRouter()
@@ -42,7 +42,7 @@ def get_savings_by_id_endpoint(user_id: int, db: Session = Depends(get_db)):
 
 @router.get("/statistic")
 def get_statistic_endpoint(user_id: int, db: Session = Depends(get_db)):
-    summary = get_financial_summary(user_id, db)
+    summary = get_statistic(user_id, db)
     return summary
 
 
