@@ -33,6 +33,7 @@ class Income(Base):
     id = Column(Integer, primary_key=True, index=True)
     income_name = Column(String(255), nullable=False)
     amount = Column(Float, nullable=False)
+    date = Column(DateTime, default=datetime.utcnow)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
 
     user = relationship('User', back_populates='incomes')

@@ -39,7 +39,8 @@ def get_savings_by_id_endpoint(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User is not found")
     return user
 
-@router.get("/user/statistic")
+
+@router.get("/statistic")
 def get_statistic_endpoint(user_id: int, db: Session = Depends(get_db)):
     summary = get_financial_summary(user_id, db)
     return summary
