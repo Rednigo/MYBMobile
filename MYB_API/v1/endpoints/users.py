@@ -4,6 +4,8 @@ from core.schemas.user_schemas import UserCreateSchema, UserLoginSchema, UserSch
 from core.repositories.user_repository import db_get_user_by_username
 from core.security.password_check import verify_password
 from fastapi import APIRouter, Depends, HTTPException
+
+from core.services.statistic_service import get_financial_summary
 from core.services.user_service import create_user, update_user_settings, get_user_by_id
 
 router = APIRouter()
@@ -36,6 +38,11 @@ def get_savings_by_id_endpoint(user_id: int, db: Session = Depends(get_db)):
     if user is None:
         raise HTTPException(status_code=404, detail="User is not found")
     return user
+
+@router.get("/user/statistic")
+def get_statistic_endpoint(user_id: int, db: Session = Depends(get_db)):
+    summary = get_financial_summary(user_id, db)
+    return summary
 
 
 @router.put("/settings", response_model=UserSchema)
