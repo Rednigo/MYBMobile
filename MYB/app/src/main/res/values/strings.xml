@@ -5,4 +5,6 @@
     <string name="enter_your_password">Enter your password</string>
     <string name="enter_your_login">Enter your login</string>
     <string name="manage_your_budget">Manage Your\n Budget</string>
+    <string name="amount_format">Amount: $%1$.2f</string>
+    <string name="root_url">http://192.168.31.56:8080/api/v1/</string>
 </resources>

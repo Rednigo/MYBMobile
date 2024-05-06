@@ -1,19 +1,22 @@
 package com.example.myb
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.provider.ContactsContract.CommonDataKinds.Website.URL
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.example.myb.utils.ApiConfig
+import org.json.JSONObject
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
 
 class LoginActivity : AppCompatActivity() {
+    private val baseUrl = ApiConfig.BASE_URL
+    private val PREF_FILE = ApiConfig.PREF_FILE
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_layout)
@@ -35,11 +38,9 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun performLogin(username: String, password: String) {
-        // Since network on main thread is not allowed, starting a new thread
         Thread {
             try {
-                // val url = URL("http://localhost:8080/login")
-                val url = URL("http://192.168.0.163:8080/api/v1/users/login")
+                val url = URL("$baseUrl/users/login")
                 val httpURLConnection = url.openConnection() as HttpURLConnection
                 httpURLConnection.requestMethod = "POST"
                 httpURLConnection.doOutput = true
@@ -53,18 +54,26 @@ class LoginActivity : AppCompatActivity() {
                 }
 
                 val responseCode = httpURLConnection.responseCode
-                val responseMessage = httpURLConnection.responseMessage
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    val inputStream = httpURLConnection.inputStream
+                    val response = inputStream.bufferedReader().use { it.readText() }
+                    val jsonResponse = JSONObject(response)
+                    val userId = jsonResponse.getInt("id")
 
-                runOnUiThread {
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        // Handle success
-                        Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
-                    } else {
-                        // Handle error
+                    val sharedPrefs = getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
+                    sharedPrefs.edit().apply {
+                        putInt("USER_ID", userId)
+                        apply()
+                    }
+
+                    val mainPageIntent = Intent(this@LoginActivity, MainActivity::class.java)
+                    startActivity(mainPageIntent)
+                    finish()
+                } else {
+                    runOnUiThread {
                         Toast.makeText(this, "Login failed with response code $responseCode", Toast.LENGTH_SHORT).show()
                     }
                 }
-
             } catch (e: Exception) {
                 e.printStackTrace()
                 runOnUiThread {

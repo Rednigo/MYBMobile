@@ -33,11 +33,11 @@ def get_expense_category_by_id_endpoint(category_id: int, db: Session = Depends(
     return category
 
 
-@router.put("/expense-categories/{category_id}", response_model=ExpenseCategorySchema)
+@router.put("/expense-categories", response_model=ExpenseCategorySchema)
 def update_expense_category_endpoint(category_id: int, category: ExpenseCategoryUpdateSchema, db: Session = Depends(get_db)):
     return update_expense_category(db=db, category_id=category_id, category=category)
 
 
-@router.delete("/expense-categories/{category_id}", response_model=ExpenseCategorySchema)
+@router.delete("/expense-categories", response_model=ExpenseCategorySchema)
 def delete_expense_category_endpoint(category_id: int, db: Session = Depends(get_db)):
     return delete_expense_category(db=db, category_id=category_id)

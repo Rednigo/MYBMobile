@@ -1,10 +1,13 @@
 from datetime import datetime
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, Float, ForeignKey, Boolean
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
+
+from core.config import DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME
 from core.settings import database_url
 
 
-engine = create_engine(database_url, echo=True)
+# engine = create_engine("mysql://root:1q2w3e4r@localhost:3306/myb_mobile", echo=True)
+engine = create_engine(f"mysql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}", echo=True)
 Base = declarative_base()
 metadata = Base.metadata
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -30,6 +33,7 @@ class Income(Base):
     id = Column(Integer, primary_key=True, index=True)
     income_name = Column(String(255), nullable=False)
     amount = Column(Float, nullable=False)
+    date = Column(DateTime, default=datetime.utcnow)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
 
     user = relationship('User', back_populates='incomes')
@@ -53,9 +57,8 @@ class ExpenseCategory(Base):
     amount = Column(Float, nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
 
-    # Relationships
-    user = relationship('User', back_populates='categories')  # Back-link to User
-    expenses = relationship('Expense', back_populates='category')  # Link to Expenses
+    user = relationship('User', back_populates='categories')
+    expenses = relationship('Expense', back_populates='category', cascade="all, delete-orphan")
 
 
 class Expense(Base):
@@ -64,7 +67,6 @@ class Expense(Base):
     expense_name = Column(String(255), nullable=False)
     amount = Column(Float, nullable=False)
     date = Column(DateTime, default=datetime.utcnow)
-    category_id = Column(Integer, ForeignKey('expense_category.id'), nullable=False)
+    category_id = Column(Integer, ForeignKey('expense_category.id', ondelete="CASCADE"))
 
-    # Relationship
-    category = relationship('ExpenseCategory', back_populates='expenses')  # Link to ExpenseCategory
+    category = relationship('ExpenseCategory', back_populates='expenses')
