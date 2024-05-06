@@ -5,13 +5,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myb.MainActivity
 import com.example.myb.R
-import com.example.myb.model.Savings // Replace with your actual Savings model import
+import com.example.myb.model.Savings // Make sure this model includes a date property
 
-class SavingsAdapter(private var savingsList: List<Savings>, private val activity: MainActivity) : RecyclerView.Adapter<SavingsAdapter.SavingsViewHolder>() {
+class SavingsAdapter(private var savingsList: MutableList<Savings>, private val activity: MainActivity) : RecyclerView.Adapter<SavingsAdapter.SavingsViewHolder>() {
 
     class SavingsViewHolder(view: ViewGroup) : RecyclerView.ViewHolder(view) {
         val savingsNameTextView: TextView = view.findViewById(R.id.textViewSavingsName)
         val amountTextView: TextView = view.findViewById(R.id.textViewAmount)
+        val dateTextView: TextView = view.findViewById(R.id.textViewDate) // TextView for displaying the date
         val editButton: ImageButton = view.findViewById(R.id.buttonEditSavings)
         val deleteButton: ImageButton = view.findViewById(R.id.buttonDeleteSavings)
     }
@@ -24,11 +25,19 @@ class SavingsAdapter(private var savingsList: List<Savings>, private val activit
     override fun onBindViewHolder(holder: SavingsViewHolder, position: Int) {
         val savings = savingsList[position]
         holder.savingsNameTextView.text = savings.SavingsName
-        holder.amountTextView.text = activity.getString(R.string.amount_format, savings.Amount)
+        holder.amountTextView.text = String.format("$%.2f", savings.Amount)
+        val dateParts = savings.Date.split("T")
+        holder.dateTextView.text = dateParts[0] // This will display only the date part "YYYY-MM-DD"
+
         holder.editButton.setOnClickListener {
+            // Assuming the dialog or some method now accepts a date to handle updates
             activity.showSavingsDialog(savings)
         }
+
         holder.deleteButton.setOnClickListener {
+            val position = holder.adapterPosition
+            savingsList.removeAt(position)
+            notifyItemRemoved(position)
             activity.savingsNetworkManager.deleteSavings(savings.id)
         }
     }
@@ -36,7 +45,23 @@ class SavingsAdapter(private var savingsList: List<Savings>, private val activit
     override fun getItemCount(): Int = savingsList.size
 
     fun updateData(newSavings: List<Savings>) {
-        savingsList = newSavings
+        savingsList.clear()
+        savingsList.addAll(newSavings)
         notifyDataSetChanged()
+    }
+
+    fun addSavings(savings: Savings) {
+        savingsList.add(savings)
+        notifyItemInserted(savingsList.size - 1)
+    }
+
+    fun updateSavings(savings: Savings, position: Int) {
+        savingsList[position] = savings
+        notifyItemChanged(position)
+    }
+
+    fun removeSavings(position: Int) {
+        savingsList.removeAt(position)
+        notifyItemRemoved(position)
     }
 }

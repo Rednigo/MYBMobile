@@ -10,6 +10,7 @@ import SavingsNetworkManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.EditText
@@ -25,6 +26,7 @@ import com.example.myb.utils.ApiConfig
 import org.json.JSONArray
 import java.net.HttpURLConnection
 import java.net.URL
+import java.time.LocalDate
 
 class MainActivity : AppCompatActivity(), UIUpdater {
     private lateinit var sharedPreferences: SharedPreferences
@@ -67,18 +69,17 @@ class MainActivity : AppCompatActivity(), UIUpdater {
 
     private fun setupRecyclerViews() {
         val incomeRecyclerView = findViewById<RecyclerView>(R.id.incomeRecyclerView)
-        incomeAdapter = IncomeAdapter(listOf(), this)
+        incomeAdapter = IncomeAdapter(mutableListOf(), this)
         incomeRecyclerView.adapter = incomeAdapter
         incomeRecyclerView.layoutManager = LinearLayoutManager(this)
 
         val savingsRecyclerView = findViewById<RecyclerView>(R.id.savingsRecyclerView)
-        savingsAdapter = SavingsAdapter(listOf(), this)
+        savingsAdapter = SavingsAdapter(mutableListOf(), this)
         savingsRecyclerView.adapter = savingsAdapter
         savingsRecyclerView.layoutManager = LinearLayoutManager(this)
 
         val categoryRecyclerView = findViewById<RecyclerView>(R.id.expenseCategoryRecyclerView)
-        categoryAdapter = ExpenseCategoryAdapter(listOf(), this) { categoryId, expenseAdapter ->
-            // This lambda now correctly fetches and updates expenses for the given category ID
+        categoryAdapter = ExpenseCategoryAdapter(mutableListOf(), this) { categoryId, expenseAdapter ->
             fetchExpensesForCategory(categoryId, expenseAdapter)
         }
         categoryRecyclerView.adapter = categoryAdapter
@@ -118,10 +119,11 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                         var user_id = userId
                         var id = jobject.getInt("id")
                         var income_name = jobject.getString("income_name")
-                        var amount = jobject.getInt("amount")
+                        var amount = jobject.getInt("amount").toFloat()
+                        Log.d("Amount", amount.toString())
                         incomes.add(Income(
                             IncomeName = income_name,
-                            Amount = amount.toFloat(),
+                            Amount = amount,
                             id = id,
                             UserId = user_id
                         ))
@@ -166,12 +168,12 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                         var user_id = userId
                         var id = jobject.getInt("id")
                         var savings_name = jobject.getString("savings_name")
-                        var amount = jobject.getInt("amount")
+                        var amount = jobject.getInt("amount").toFloat()
                         var date = jobject.getString("date")
                         savings.add(
                             Savings(
                                 SavingsName = savings_name,
-                                Amount = amount.toFloat(),
+                                Amount = amount,
                                 id = id,
                                 UserId = user_id,
                                 Date = date
@@ -288,7 +290,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
 
 
     fun showIncomeDialog(income: Income?) {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.item_income, null)
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.item_income_edit, null)
         val nameInput = dialogView.findViewById<EditText>(R.id.income_name_text_view)
         val amountInput = dialogView.findViewById<EditText>(R.id.amount_text_view)
         val dialog = AlertDialog.Builder(this)
@@ -298,12 +300,19 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                 val amount = amountInput.text.toString().toFloatOrNull() ?: 0f
                 if (income == null) {
                     incomeNetworkManager.createIncome(name, amount, getUserId()) // Assuming a static user ID for demonstration
-                    fetchAndDisplayIncome()
+                    runOnUiThread {
+                        incomeAdapter.addIncome(Income(IncomeName = name,
+                            Amount = amount,
+                            UserId = getUserId()))
+                    }
                 } else {
                     incomeNetworkManager.updateIncome(income.id, name, amount)
-                    fetchAndDisplayIncome()
+                    runOnUiThread {
+                        incomeAdapter.updateIncome(Income(IncomeName = name,
+                            Amount = amount,
+                            UserId = getUserId()), income.id)
+                    }
                 }
-                fetchAndDisplayIncome()
             }
             .setNegativeButton("Cancel", null)
             .create()
@@ -311,32 +320,40 @@ class MainActivity : AppCompatActivity(), UIUpdater {
     }
 
     fun showSavingsDialog(savings: Savings?) {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.item_savings, null)
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.item_savings_edit, null)
         val nameInput = dialogView.findViewById<EditText>(R.id.textViewSavingsName)
         val amountInput = dialogView.findViewById<EditText>(R.id.textViewAmount)
+        val currentDate = LocalDate.now().toString()  // Get current date in ISO format
+
+        // Pre-fill the dialog if editing an existing savings, use current date for new savings
+        savings?.let {
+            nameInput.setText(savings.SavingsName)
+            amountInput.setText(savings.Amount.toString())
+        }
+
         val dialog = AlertDialog.Builder(this)
             .setView(dialogView)
             .setPositiveButton("Save") { _, _ ->
                 val name = nameInput.text.toString()
                 val amount = amountInput.text.toString().toFloatOrNull() ?: 0f
                 if (savings == null) {
-                    savingsNetworkManager.createSavings(name, amount, getUserId())
-                    fetchAndDisplaySavings()
-                    // Assuming a static user ID for demonstration
+                    // Create a new savings entry with the current date
+                    savingsNetworkManager.createSavings(name, amount, getUserId(), currentDate)
                 } else {
-                    savingsNetworkManager.updateSavings(savings.id, name, amount)
-                    fetchAndDisplaySavings()
+                    // Update existing savings entry with the current date
+                    savingsNetworkManager.updateSavings(savings.id, name, amount, currentDate)
                 }
+                fetchAndDisplaySavings()  // Refresh the UI to show the updated list
             }
             .setNegativeButton("Cancel", null)
             .create()
         dialog.show()
-
     }
+
 
     fun showCategoryDialog(category: ExpenseCategory?) {
         val layoutInflater = LayoutInflater.from(this)
-        val dialogView = layoutInflater.inflate(R.layout.item_expense_category, null)
+        val dialogView = layoutInflater.inflate(R.layout.item_expense_category_edit, null)
         val categoryNameInput = dialogView.findViewById<EditText>(R.id.textViewCategoryName)
         val categoryBudgetInput = dialogView.findViewById<EditText>(R.id.textViewCategoryBudget)
 
@@ -367,7 +384,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
     }
 
     fun showExpenseDialog(expense: Expense?) {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.item_expense, null)
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.item_expense_edit, null)
         val nameInput = dialogView.findViewById<EditText>(R.id.textViewExpenseName)
         val amountInput = dialogView.findViewById<EditText>(R.id.textViewExpenseAmount)
         expense?.let {

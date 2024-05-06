@@ -6,30 +6,40 @@
     android:layout_height="wrap_content"
     android:padding="16dp">
 
-    <!-- Savings Name EditText -->
-    <EditText
+    <TextView
         android:id="@+id/textViewSavingsName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="22sp"
         app:layout_constraintEnd_toStartOf="@+id/buttonEditSavings"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="Savings Name" />
 
-    <!-- Amount EditText -->
-    <EditText
+    <TextView
         android:id="@+id/textViewAmount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@+id/textViewSavingsName"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:textSize="22sp"
         app:layout_constraintEnd_toStartOf="@+id/buttonEditSavings"
-        tools:text="Amount: $1000" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSavingsName"
+        tools:text="$0.00" />
 
-    <!-- Edit Savings Button -->
+    <TextView
+        android:id="@+id/textViewDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/buttonEditSavings"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewAmount"
+        tools:text="YYYY-MM-DD" />
+
     <ImageButton
         android:id="@+id/buttonEditSavings"
         android:layout_width="wrap_content"
@@ -38,7 +48,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Delete Savings Button -->
     <ImageButton
         android:id="@+id/buttonDeleteSavings"
         android:layout_width="wrap_content"

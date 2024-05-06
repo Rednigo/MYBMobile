@@ -12,7 +12,7 @@ import com.example.myb.MainActivity
 import com.example.myb.R
 
 class ExpenseCategoryAdapter(
-    private var categories: List<ExpenseCategory>,
+    private var categories: MutableList<ExpenseCategory>,
     private val activity: MainActivity,
     private val fetchExpensesForCategory: (Int, ExpenseAdapter) -> Unit
 ) : RecyclerView.Adapter<ExpenseCategoryAdapter.CategoryViewHolder>() {
@@ -31,10 +31,9 @@ class ExpenseCategoryAdapter(
         }
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_expense_category, parent, false)
-        val adapter = ExpenseAdapter(emptyList(), object : ExpenseAdapter.ExpenseItemListener {
+        val adapter = ExpenseAdapter(mutableListOf(), object : ExpenseAdapter.ExpenseItemListener {
             override fun onEditExpense(expense: Expense) {
                 activity.showExpenseDialog(expense)
             }
@@ -55,19 +54,37 @@ class ExpenseCategoryAdapter(
 
         holder.editButton.setOnClickListener { activity.showCategoryDialog(category) }
         holder.deleteButton.setOnClickListener {
+            val position = holder.adapterPosition
+            categories.removeAt(position)
+            notifyItemRemoved(position)
             activity.expenseCategoryNetworkManager.deleteExpenseCategory(category.id)
         }
         holder.addButton.setOnClickListener {
-            // This will open a dialog to add a new expense for this category
-            activity.showExpenseDialog(null) // Assume Expense has a constructor taking categoryId
+            activity.showExpenseDialog(null) // Pass `null` or a specific constructor if required
         }
     }
 
     override fun getItemCount(): Int = categories.size
 
     fun updateCategories(newCategories: List<ExpenseCategory>) {
-        categories = newCategories
+        categories.clear()
+        categories.addAll(newCategories)
         notifyDataSetChanged()
     }
-}
 
+
+    fun addCategory(category: ExpenseCategory) {
+        categories.add(category)
+        notifyItemInserted(categories.size - 1)
+    }
+
+    fun updateCategory(category: ExpenseCategory, position: Int) {
+        categories[position] = category
+        notifyItemChanged(position)
+    }
+
+    fun removeCategory(position: Int) {
+        categories.removeAt(position)
+        notifyItemRemoved(position)
+    }
+}
