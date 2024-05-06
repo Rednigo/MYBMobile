@@ -87,47 +87,33 @@ class MainActivity : AppCompatActivity(), UIUpdater {
         fetchAndDisplaySavings()
         fetchAndDisplayExpenseCategories()
 
-//        val backButton = findViewById<LinearLayout>(R.id.backButtonLayoutStat)
-//
-//        backButton.setOnClickListener {
-//            // Створюємо інтент для переходу на MainActivity
-//            val intent = Intent(this, MainActivity::class.java)
-//            // Запускаємо MainActivity
-//            startActivity(intent)
-//            // Завершуємо поточну активність
-//            finish()
-//        }
-
         val spinner = findViewById<Spinner>(R.id.dropdownSpinner)
 
-        // Створіть пустий адаптер для Spinner
+// Створіть пустий адаптер для Spinner
         val adapter = ArrayAdapter<String>(this, R.layout.spinner_item_header)
 
-        // Встановіть макет для випадаючого списку
+// Встановіть макет для випадаючого списку
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-        // Додайте текст-підказку до адаптера (це перший елемент у списку)
+// Додайте текст-підказку до адаптера (це перший елемент у списку)
 
-        adapter.add("")
-        adapter.add("Statistics")
         adapter.add("Home")
+        adapter.add("Statistics")
         adapter.add("Settings")
 
 
-        // Встановіть адаптер для Spinner
+
+// Встановіть адаптер для Spinner
         spinner.adapter = adapter
 
         // Встановіть підказку
         spinner.prompt = "Choose an option"
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+
                 when (position) {
+
                     1 -> {
                         // Створюємо інтент для переходу на SettingsActivity
                         val intent = Intent(this@MainActivity, StatisticsActivity::class.java)
@@ -137,14 +123,6 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                     }
 
                     2 -> {
-                        // Створюємо інтент для переходу на SettingsActivity
-                        val intent = Intent(this@MainActivity, MainActivity::class.java)
-                        startActivity(intent)
-                        // Завершуємо поточну активність
-                        finish()
-                    }
-
-                    3 -> {
                         // Створюємо інтент для переходу на StatisticsActivity
                         val intent = Intent(this@MainActivity, SettingsActivity::class.java)
                         // Запускаємо StatisticsActivity
