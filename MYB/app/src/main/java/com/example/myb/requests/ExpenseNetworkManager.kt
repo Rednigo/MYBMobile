@@ -65,7 +65,6 @@ class ExpenseNetworkManager(private val uiUpdater: UIUpdater) {
                     {
                         "expense_name": "${newName ?: ""}",
                         "amount": ${newAmount ?: "null"},
-                        "date": ${newDate ?: "null"}
                     }
                 """.trimIndent()
 

@@ -35,7 +35,7 @@ class ExpenseCategoryAdapter(
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_expense_category, parent, false)
         val adapter = ExpenseAdapter(mutableListOf(), object : ExpenseAdapter.ExpenseItemListener {
             override fun onEditExpense(expense: Expense) {
-                activity.showExpenseDialog(expense)
+                activity.showExpenseDialog(expense, 1)
             }
 
             override fun onDeleteExpense(expenseId: Int) {
@@ -59,7 +59,7 @@ class ExpenseCategoryAdapter(
             activity.expenseCategoryNetworkManager.deleteExpenseCategory(category.id)
         }
         holder.addButton.setOnClickListener {
-            activity.showExpenseDialog(null) // Pass `null` or a specific constructor if required
+            activity.showExpenseDialog(null, category.id) // Pass `null` or a specific constructor if required
         }
     }
 

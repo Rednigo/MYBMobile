@@ -246,7 +246,8 @@ class MainActivity : AppCompatActivity(), UIUpdater {
     fun fetchExpensesForCategory(categoryId: Int, expenseAdapter: ExpenseAdapter) {
         Thread {
             try {
-                val url = URL("$baseUrl/expenses/expenses?expense_id=$categoryId")
+                // Ensure the endpoint is correct and that it uses `category_id` as the query parameter
+                val url = URL("$baseUrl/expenses?category_id=$categoryId")
                 val httpURLConnection = url.openConnection() as HttpURLConnection
                 httpURLConnection.requestMethod = "GET"
 
@@ -262,7 +263,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                         val jsonObject = jArray.getJSONObject(i)
                         val id = jsonObject.getInt("id")
                         val expenseName = jsonObject.getString("expense_name")
-                        val amount = jsonObject.getDouble("amount").toFloat()
+                        val amount = jsonObject.getDouble("amount").toFloat()  // Ensure parsing as float if needed
                         val date = jsonObject.getString("date")
                         expenses.add(Expense(id = id,
                             CategoryId = categoryId,
@@ -271,7 +272,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                             Date = date))
                     }
                     runOnUiThread {
-                        // Assuming there's a method to update expenses in your ExpenseCategoryAdapter
+                        // This should refer to a method to update the specific expense adapter with new data
                         expenseAdapter.updateExpenses(expenses)
                     }
                 } else {
@@ -287,6 +288,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
             }
         }.start()
     }
+
 
 
     fun showIncomeDialog(income: Income?) {
@@ -412,11 +414,12 @@ class MainActivity : AppCompatActivity(), UIUpdater {
 
     }
 
-    fun showExpenseDialog(expense: Expense?) {
+    fun showExpenseDialog(expense: Expense?, categoryId: Int) {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.item_expense_edit, null)
         val nameInput = dialogView.findViewById<EditText>(R.id.textViewExpenseName)
         val amountInput = dialogView.findViewById<EditText>(R.id.textViewExpenseAmount)
         val currentDate = LocalDate.now().toString()
+
         expense?.let {
             nameInput.setText(it.ExpenseName)
             amountInput.setText(it.Amount.toString())
@@ -427,31 +430,35 @@ class MainActivity : AppCompatActivity(), UIUpdater {
             .setTitle(if (expense == null) "Add Expense" else "Edit Expense")
             .setPositiveButton("Save") { _, _ ->
                 val name = nameInput.text.toString()
-                val amount = amountInput.text.toString().toFloat()
+                val amount = amountInput.text.toString().toFloatOrNull() ?: 0f
+
                 if (expense == null) {
-                    expenseNetworkManager.createExpense(name, amount, currentDate, 1)
+                    // Create a new Expense with the specific categoryId
+                    expenseNetworkManager.createExpense(name, amount, currentDate, categoryId)
                     runOnUiThread {
                         expenseAdapter.addExpense(
                             Expense(ExpenseName = name,
                                 Amount = amount,
                                 Date = currentDate,
-                                CategoryId = 1))
+                                CategoryId = categoryId))
                     }
                 } else {
+                    // Update the existing Expense with the new details
                     expenseNetworkManager.updateExpense(expense.id, name, amount, currentDate)
                     runOnUiThread {
                         expenseAdapter.updateExpense(
                             Expense(id = expense.id,
                                 ExpenseName = name,
                                 Amount = amount,
-                                Date = currentDate,
-                                CategoryId = 1))
+                                Date = expense.Date,
+                                CategoryId = expense.CategoryId))
                     }
                 }
             }
             .setNegativeButton("Cancel", null)
             .show()
     }
+
 
     override fun runOnUIThread(action: () -> Unit) {
         runOnUiThread(action)
