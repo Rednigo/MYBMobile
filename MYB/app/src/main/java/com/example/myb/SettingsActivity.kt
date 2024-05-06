@@ -3,20 +3,29 @@ package com.example.myb
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
+import android.content.SharedPreferences
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Spinner
+import com.example.myb.utils.ApiConfig
 
 
 class SettingsActivity : AppCompatActivity() {
+    private lateinit var sharedPreferences: SharedPreferences
+    private val PREF_FILE = ApiConfig.PREF_FILE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//        if (getUserLanguage() == "uk") {
+//            setContentView(R.layout.activity_settings_uk)
+//        }
+//        else {
+//            setContentView(R.layout.activity_settings)
+//        }
         setContentView(R.layout.activity_settings)
-
         val backButton = findViewById<LinearLayout>(R.id.backButtonLayout)
 
         backButton.setOnClickListener {
@@ -80,7 +89,13 @@ class SettingsActivity : AppCompatActivity() {
                 // Нічого не робимо, якщо нічого не вибрано
             }
         }
+    }
 
+    private fun getUserId(): Int {
+        return sharedPreferences.getInt("USER_ID", -1) // -1 as default if not found
+    }
 
+    private fun getUserLanguage(): String? {
+        return sharedPreferences.getString("LANG", "en") // -1 as default if not found
     }
 }

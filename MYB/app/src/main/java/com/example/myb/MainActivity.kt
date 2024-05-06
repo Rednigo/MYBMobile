@@ -99,8 +99,8 @@ class MainActivity : AppCompatActivity(), UIUpdater {
 
 // Додайте текст-підказку до адаптера (це перший елемент у списку)
 
-        adapter.add("Statistics")
         adapter.add("Home")
+        adapter.add("Statistics")
         adapter.add("Settings")
 
 
@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
 
                     1 -> {
                         // Створюємо інтент для переходу на SettingsActivity
-                        val intent = Intent(this@MainActivity, MainActivity::class.java)
+                        val intent = Intent(this@MainActivity, StatisticsActivity::class.java)
                         startActivity(intent)
                         // Завершуємо поточну активність
                         finish()

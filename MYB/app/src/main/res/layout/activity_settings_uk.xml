@@ -1,0 +1,94 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Custom Header -->
+    <include layout="@layout/custom_header" />
+
+    <!-- Кнопка "Back" -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="16dp"
+        android:id="@+id/backButtonLayout"
+        >
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="30dp"
+            android:layout_height="37dp"
+            android:background="#00000000"
+            android:contentDescription="Back"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_arrow_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Назад"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:layout_gravity="center_vertical" />
+
+    </LinearLayout>
+
+    <!-- Language and Theme Selection -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="40dp">
+
+        <!-- Language Selection -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="100dp">
+
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="Виберіть мову"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:padding="16dp" />
+
+            <Spinner
+                android:id="@+id/languageSpinner"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:entries="@array/languages_uk"
+                android:padding="8dp" />
+
+        </LinearLayout>
+
+        <!-- Theme Selection -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="Виберіть тему"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:padding="16dp" />
+
+            <Spinner
+                android:id="@+id/themeSpinner"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:entries="@array/theme_values_uk"
+                android:padding="8dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>
