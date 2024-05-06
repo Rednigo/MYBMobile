@@ -3,6 +3,7 @@ package com.example.myb.requests
 import android.widget.Toast
 import com.example.myb.interfaces.UIUpdater
 import com.example.myb.utils.ApiConfig
+import org.json.JSONObject
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
@@ -10,7 +11,7 @@ import java.net.URL
 class ExpenseCategoryNetworkManager(private val uiUpdater: UIUpdater) {
     private val baseUrl = ApiConfig.BASE_URL + "/categories"
 
-    fun createExpenseCategory(categoryName: String, amount: Float, userId: Int) {
+    fun createExpenseCategory(categoryName: String, amount: Float, userId: Int, callback: (Result<Int>) -> Unit) {
         Thread {
             try {
                 val url = URL("$baseUrl/expense-categories")
@@ -20,12 +21,12 @@ class ExpenseCategoryNetworkManager(private val uiUpdater: UIUpdater) {
                 connection.setRequestProperty("Content-Type", "application/json")
 
                 val postData = """
-                    {
-                        "category_name": "$categoryName",
-                        "amount": $amount,
-                        "user_id": $userId
-                    }
-                """.trimIndent()
+                {
+                    "category_name": "$categoryName",
+                    "amount": $amount,
+                    "user_id": $userId
+                }
+            """.trimIndent()
 
                 OutputStreamWriter(connection.outputStream).use { writer ->
                     writer.write(postData)
@@ -33,23 +34,27 @@ class ExpenseCategoryNetworkManager(private val uiUpdater: UIUpdater) {
                 }
 
                 val responseCode = connection.responseCode
-                uiUpdater.runOnUIThread {
-                    val context = uiUpdater.getContext()
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        Toast.makeText(context, "Category created successfully", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(context, "Failed to create category: $responseCode", Toast.LENGTH_SHORT).show()
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    val inputStream = connection.inputStream
+                    val response = inputStream.bufferedReader().use { it.readText() }
+                    val categoryId = JSONObject(response).getInt("id")  // Assumes 'id' is the key for the category ID in the response JSON
+                    uiUpdater.runOnUIThread {
+                        callback(Result.success(categoryId))
+                    }
+                } else {
+                    uiUpdater.runOnUIThread {
+                        callback(Result.failure(RuntimeException("Failed to create category: $responseCode")))
                     }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
                 uiUpdater.runOnUIThread {
-                    val context = uiUpdater.getContext()
-                    Toast.makeText(context, "Failed to create category: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                    callback(Result.failure(RuntimeException("Failed to create category: ${e.localizedMessage}")))
                 }
             }
         }.start()
     }
+
 
     fun updateExpenseCategory(categoryId: Int, newName: String?, newAmount: Float?) {
         Thread {

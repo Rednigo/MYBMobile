@@ -15,5 +15,6 @@ data class Income(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val IncomeName: String,
     val Amount: Float,
+    val Date: String,
     val UserId: Int
 )
