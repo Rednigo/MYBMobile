@@ -1,7 +1,7 @@
 <resources>
     <string-array name="view_types">
         <item>Settings</item>
-        <item>Statistic</item>
+        <item>Statistics</item>
     </string-array>
 
 

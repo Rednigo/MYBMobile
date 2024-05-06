@@ -23,11 +23,12 @@
 
         <Spinner
             android:id="@+id/dropdownSpinner"
-            android:layout_width="100dp"
-            android:layout_height="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_weight="0"
-            android:textColor="#FFFFFF" />
+            android:textColor="#808080"
+            android:entries="@array/view_types"/>
     </LinearLayout>
 
     <!-- Кнопка "Back" -->
@@ -35,7 +36,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="16dp">
+        android:layout_margin="16dp"
+        android:id="@+id/backButtonLayoutStat">
 
         <ImageButton
             android:id="@+id/backButton"

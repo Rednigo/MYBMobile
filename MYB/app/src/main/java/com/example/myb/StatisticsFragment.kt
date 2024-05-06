@@ -1,11 +1,9 @@
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.myb.R
@@ -15,7 +13,7 @@ class StatisticsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Задаємо макет фрагмента
-        val rootView = inflater.inflate(R.layout.fragment_statistics, container, false)
+        val rootView = inflater.inflate(R.layout.activity_statistics, container, false)
 
         // Отримуємо рідну ViewGroup, в яку будемо додавати рядки
         val tableLayout = rootView.findViewById<LinearLayout>(R.id.statistics_table_id)

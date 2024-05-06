@@ -1,18 +1,14 @@
 package com.example.myb
-import StatisticsFragment
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.room.Room
 import com.example.myb.dao.ExpenseCategoryDao
 import com.example.myb.dao.SavingsDao
 import com.example.myb.dao.UserDao
 import com.example.myb.database.AppDatabase
 import com.example.myb.model.Savings
-import com.example.myb.model.User
 import androidx.appcompat.app.AlertDialog
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -29,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_settings)
+        setContentView(R.layout.activity_main)
 
        // super.onCreate(savedInstanceState)
        // supportFragmentManager.beginTransaction()
