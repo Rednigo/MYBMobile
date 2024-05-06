@@ -1,5 +1,20 @@
 package com.example.myb
 
+
+
+import android.os.Bundle
+//import android.text.InputType
+//import android.view.ViewGroup
+import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
+//import com.example.myb.dao.ExpenseCategoryDao
+//import com.example.myb.dao.SavingsDao
+//import com.example.myb.dao.UserDao
+//import com.example.myb.database.AppDatabase
+import com.example.myb.model.Savings
+import androidx.appcompat.app.AlertDialog
+
+
 import ExpenseAdapter
 import ExpenseCategoryAdapter
 import ExpenseNetworkManager
@@ -8,19 +23,25 @@ import IncomeNetworkManager
 import SavingsAdapter
 import SavingsNetworkManager
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Bundle
+//import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.widget.Button
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+//import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.Spinner
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+//import androidx.appcompat.app.AlertDialog
+//import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myb.interfaces.UIUpdater
-import com.example.myb.model.Savings
+//import com.example.myb.model.Savings
 import com.example.myb.requests.ExpenseCategoryNetworkManager
 import com.example.myb.utils.ApiConfig
 import org.json.JSONArray
@@ -61,6 +82,81 @@ class MainActivity : AppCompatActivity(), UIUpdater {
         fetchAndDisplayIncome()
         fetchAndDisplaySavings()
         fetchAndDisplayExpenseCategories()
+
+//        val backButton = findViewById<LinearLayout>(R.id.backButtonLayoutStat)
+//
+//        backButton.setOnClickListener {
+//            // Створюємо інтент для переходу на MainActivity
+//            val intent = Intent(this, MainActivity::class.java)
+//            // Запускаємо MainActivity
+//            startActivity(intent)
+//            // Завершуємо поточну активність
+//            finish()
+//        }
+
+        val spinner = findViewById<Spinner>(R.id.dropdownSpinner)
+
+        // Створіть пустий адаптер для Spinner
+        val adapter = ArrayAdapter<String>(this, R.layout.spinner_item_header)
+
+        // Встановіть макет для випадаючого списку
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        // Додайте текст-підказку до адаптера (це перший елемент у списку)
+
+        adapter.add("")
+        adapter.add("Statistics")
+        adapter.add("Home")
+        adapter.add("Settings")
+
+
+        // Встановіть адаптер для Spinner
+        spinner.adapter = adapter
+
+        // Встановіть підказку
+        spinner.prompt = "Choose an option"
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                when (position) {
+                    1 -> {
+                        // Створюємо інтент для переходу на SettingsActivity
+                        val intent = Intent(this@MainActivity, StatisticsActivity::class.java)
+                        startActivity(intent)
+                        // Завершуємо поточну активність
+                        finish()
+                    }
+
+                    2 -> {
+                        // Створюємо інтент для переходу на SettingsActivity
+                        val intent = Intent(this@MainActivity, MainActivity::class.java)
+                        startActivity(intent)
+                        // Завершуємо поточну активність
+                        finish()
+                    }
+
+                    3 -> {
+                        // Створюємо інтент для переходу на StatisticsActivity
+                        val intent = Intent(this@MainActivity, SettingsActivity::class.java)
+                        // Запускаємо StatisticsActivity
+                        startActivity(intent)
+                        // Завершуємо поточну активність
+                        finish()
+                    }
+                    // Додайте інші варіанти, якщо потрібно
+                }
+
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Нічого не робимо, якщо нічого не вибрано
+            }
+        }
     }
 
     private fun getUserId(): Int {
