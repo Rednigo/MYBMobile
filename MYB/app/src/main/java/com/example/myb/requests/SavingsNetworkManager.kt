@@ -1,15 +1,14 @@
-
-import android.widget.Toast
-import com.example.myb.interfaces.UIUpdater
-import com.example.myb.utils.ApiConfig
-import java.io.OutputStreamWriter
-import java.net.HttpURLConnection
-import java.net.URL
+import android.widget.Toast;
+import com.example.myb.interfaces.UIUpdater;
+import com.example.myb.utils.ApiConfig;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 class SavingsNetworkManager(private val uiUpdater: UIUpdater) {
     private val baseUrl = ApiConfig.BASE_URL + "/savings"
 
-    fun createSavings(savingsName: String, amount: Float, userId: Int) {
+    fun createSavings(savingsName: String, amount: Float, userId: Int, date: String) {
         Thread {
             try {
                 val url = URL("$baseUrl/savings")
@@ -22,7 +21,8 @@ class SavingsNetworkManager(private val uiUpdater: UIUpdater) {
                     {
                         "savings_name": "$savingsName",
                         "amount": $amount,
-                        "user_id": $userId
+                        "date": "$date",
+                        "user_id": $userId              
                     }
                 """.trimIndent()
 
@@ -50,7 +50,7 @@ class SavingsNetworkManager(private val uiUpdater: UIUpdater) {
         }.start()
     }
 
-    fun updateSavings(savingsId: Int, newName: String?, newAmount: Float?) {
+    fun updateSavings(savingsId: Int, newName: String?, newAmount: Float?, date: String?) {
         Thread {
             try {
                 val url = URL("$baseUrl/savings?savings_id=$savingsId")
@@ -63,6 +63,7 @@ class SavingsNetworkManager(private val uiUpdater: UIUpdater) {
                     {
                         "savings_name": "${newName ?: ""}",
                         "amount": ${newAmount ?: "null"}
+
                     }
                 """.trimIndent()
 
