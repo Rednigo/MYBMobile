@@ -300,12 +300,19 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                 val amount = amountInput.text.toString().toFloatOrNull() ?: 0f
                 if (income == null) {
                     incomeNetworkManager.createIncome(name, amount, getUserId()) // Assuming a static user ID for demonstration
-                    fetchAndDisplayIncome()
+                    runOnUiThread {
+                        incomeAdapter.addIncome(Income(IncomeName = name,
+                            Amount = amount,
+                            UserId = getUserId()))
+                    }
                 } else {
                     incomeNetworkManager.updateIncome(income.id, name, amount)
-                    fetchAndDisplayIncome()
+                    runOnUiThread {
+                        incomeAdapter.updateIncome(Income(IncomeName = name,
+                            Amount = amount,
+                            UserId = getUserId()), income.id)
+                    }
                 }
-                fetchAndDisplayIncome()
             }
             .setNegativeButton("Cancel", null)
             .create()

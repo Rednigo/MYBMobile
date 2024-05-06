@@ -5,16 +5,15 @@
     android:layout_height="match_parent"
     android:background="#F5F5F5">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
-
 
             <!-- MYB Header -->
             <TextView
@@ -34,13 +33,13 @@
                 android:layout_marginTop="16dp"
                 card_view:cardElevation="4dp"
                 card_view:cardCornerRadius="4dp">
-
+                <!-- No ScrollView here, the content will expand -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="8dp"
-                    android:background="@drawable/cardview_border">>
+                    android:background="@drawable/cardview_border">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -52,7 +51,6 @@
                         android:id="@+id/incomeRecyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
-                    <!-- Dynamic list for Income items -->
 
                     <Button
                         android:layout_width="match_parent"
@@ -160,5 +158,5 @@
 <!--                android:paddingEnd="16dp"-->
 <!--                android:layout_marginTop="16dp" />-->
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </RelativeLayout>
