@@ -1,9 +1,12 @@
+from datetime import datetime
+
 from pydantic import BaseModel
 
 
 class IncomeBase(BaseModel):
     income_name: str
     amount: float
+    date: datetime
     user_id: int
 
 
