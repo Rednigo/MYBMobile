@@ -1,3 +1,4 @@
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageButton
@@ -36,9 +37,9 @@ class SavingsAdapter(private var savingsList: MutableList<Savings>, private val 
 
         holder.deleteButton.setOnClickListener {
             val position = holder.adapterPosition
-            savingsList.removeAt(position)
-            notifyItemRemoved(position)
+            removeSavings(position)
             activity.savingsNetworkManager.deleteSavings(savings.id)
+            Log.d("Income id", savings.id.toString())
         }
     }
 
@@ -55,9 +56,12 @@ class SavingsAdapter(private var savingsList: MutableList<Savings>, private val 
         notifyItemInserted(savingsList.size - 1)
     }
 
-    fun updateSavings(savings: Savings, position: Int) {
-        savingsList[position] = savings
-        notifyItemChanged(position)
+    fun updateSavings(savings: Savings) {
+        val index = savingsList.indexOfFirst { it.id == savings.id }
+        if (index != -1) {
+            savingsList[index] = savings
+            notifyItemChanged(index)
+        }
     }
 
     fun removeSavings(position: Int) {

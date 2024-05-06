@@ -1,3 +1,4 @@
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageButton
@@ -30,9 +31,9 @@ class IncomeAdapter(private var incomes: MutableList<Income>, private val activi
         }
         holder.deleteButton.setOnClickListener {
             val position = holder.adapterPosition
-            incomes.removeAt(position)
-            notifyItemRemoved(position)
+            removeIncome(position)
             activity.incomeNetworkManager.deleteIncome(income.id)
+            Log.d("Income id", income.id.toString())
         }
     }
 
@@ -49,9 +50,12 @@ class IncomeAdapter(private var incomes: MutableList<Income>, private val activi
         notifyItemInserted(incomes.size - 1)
     }
 
-    fun updateIncome(income: Income, position: Int) {
-        incomes[position] = income
-        notifyItemChanged(position)
+    fun updateIncome(income: Income) {
+        val index = incomes.indexOfFirst { it.id == income.id }
+        if (index != -1) {
+            incomes[index] = income
+            notifyItemChanged(index)
+        }
     }
 
     fun removeIncome(position: Int) {

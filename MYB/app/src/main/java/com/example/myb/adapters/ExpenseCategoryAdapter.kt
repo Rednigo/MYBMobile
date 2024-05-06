@@ -35,7 +35,7 @@ class ExpenseCategoryAdapter(
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_expense_category, parent, false)
         val adapter = ExpenseAdapter(mutableListOf(), object : ExpenseAdapter.ExpenseItemListener {
             override fun onEditExpense(expense: Expense) {
-                activity.showExpenseDialog(expense)
+                activity.showExpenseDialog(expense, 1)
             }
 
             override fun onDeleteExpense(expenseId: Int) {
@@ -55,12 +55,11 @@ class ExpenseCategoryAdapter(
         holder.editButton.setOnClickListener { activity.showCategoryDialog(category) }
         holder.deleteButton.setOnClickListener {
             val position = holder.adapterPosition
-            categories.removeAt(position)
-            notifyItemRemoved(position)
+            removeCategory(position)
             activity.expenseCategoryNetworkManager.deleteExpenseCategory(category.id)
         }
         holder.addButton.setOnClickListener {
-            activity.showExpenseDialog(null) // Pass `null` or a specific constructor if required
+            activity.showExpenseDialog(null, category.id) // Pass `null` or a specific constructor if required
         }
     }
 
@@ -78,9 +77,12 @@ class ExpenseCategoryAdapter(
         notifyItemInserted(categories.size - 1)
     }
 
-    fun updateCategory(category: ExpenseCategory, position: Int) {
-        categories[position] = category
-        notifyItemChanged(position)
+    fun updateCategory(category: ExpenseCategory) {
+        val index = categories.indexOfFirst { it.id == category.id }
+        if (index != -1) {
+            categories[index] = category
+            notifyItemChanged(index)
+        }
     }
 
     fun removeCategory(position: Int) {

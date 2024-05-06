@@ -2,19 +2,19 @@ package com.example.myb
 
 
 
-import android.os.Bundle
 //import android.text.InputType
 //import android.view.ViewGroup
-import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
 //import com.example.myb.dao.ExpenseCategoryDao
 //import com.example.myb.dao.SavingsDao
 //import com.example.myb.dao.UserDao
 //import com.example.myb.database.AppDatabase
-import com.example.myb.model.Savings
-import androidx.appcompat.app.AlertDialog
 
 
+//import android.os.Bundle
+//import android.widget.Button
+//import androidx.appcompat.app.AlertDialog
+//import androidx.appcompat.app.AppCompatActivity
+//import com.example.myb.model.Savings
 import ExpenseAdapter
 import ExpenseCategoryAdapter
 import ExpenseNetworkManager
@@ -25,23 +25,22 @@ import SavingsNetworkManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-//import android.os.Bundle
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-//import android.widget.Button
+import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.Toast
-//import androidx.appcompat.app.AlertDialog
-//import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myb.interfaces.UIUpdater
-//import com.example.myb.model.Savings
+import com.example.myb.model.Savings
 import com.example.myb.requests.ExpenseCategoryNetworkManager
 import com.example.myb.utils.ApiConfig
 import org.json.JSONArray
@@ -216,11 +215,13 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                         var id = jobject.getInt("id")
                         var income_name = jobject.getString("income_name")
                         var amount = jobject.getInt("amount").toFloat()
+                        var date = jobject.getString("date")
                         Log.d("Amount", amount.toString())
                         incomes.add(Income(
                             IncomeName = income_name,
                             Amount = amount,
                             id = id,
+                            Date = date,
                             UserId = user_id
                         ))
                     }
@@ -342,7 +343,8 @@ class MainActivity : AppCompatActivity(), UIUpdater {
     fun fetchExpensesForCategory(categoryId: Int, expenseAdapter: ExpenseAdapter) {
         Thread {
             try {
-                val url = URL("$baseUrl/expenses/expenses?expense_id=$categoryId")
+                // Ensure the endpoint is correct and that it uses `category_id` as the query parameter
+                val url = URL("$baseUrl/expenses/expenses?category_id=$categoryId")
                 val httpURLConnection = url.openConnection() as HttpURLConnection
                 httpURLConnection.requestMethod = "GET"
 
@@ -358,7 +360,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                         val jsonObject = jArray.getJSONObject(i)
                         val id = jsonObject.getInt("id")
                         val expenseName = jsonObject.getString("expense_name")
-                        val amount = jsonObject.getDouble("amount").toFloat()
+                        val amount = jsonObject.getDouble("amount").toFloat()  // Ensure parsing as float if needed
                         val date = jsonObject.getString("date")
                         expenses.add(Expense(id = id,
                             CategoryId = categoryId,
@@ -367,7 +369,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                             Date = date))
                     }
                     runOnUiThread {
-                        // Assuming there's a method to update expenses in your ExpenseCategoryAdapter
+                        // This should refer to a method to update the specific expense adapter with new data
                         expenseAdapter.updateExpenses(expenses)
                     }
                 } else {
@@ -385,28 +387,56 @@ class MainActivity : AppCompatActivity(), UIUpdater {
     }
 
 
+
     fun showIncomeDialog(income: Income?) {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.item_income_edit, null)
         val nameInput = dialogView.findViewById<EditText>(R.id.income_name_text_view)
         val amountInput = dialogView.findViewById<EditText>(R.id.amount_text_view)
+        val currentDate = LocalDate.now().toString()  // Get current date in ISO format
+
+        income?.let {
+            nameInput.setText(it.IncomeName)
+            amountInput.setText(it.Amount.toString())
+        }
+
         val dialog = AlertDialog.Builder(this)
             .setView(dialogView)
             .setPositiveButton("Save") { _, _ ->
                 val name = nameInput.text.toString()
                 val amount = amountInput.text.toString().toFloatOrNull() ?: 0f
                 if (income == null) {
-                    incomeNetworkManager.createIncome(name, amount, getUserId()) // Assuming a static user ID for demonstration
-                    runOnUiThread {
-                        incomeAdapter.addIncome(Income(IncomeName = name,
-                            Amount = amount,
-                            UserId = getUserId()))
+                    incomeNetworkManager.createIncome(name, amount, currentDate, getUserId()) { result ->
+                        result.fold(
+                            onSuccess = { incomeId ->
+                                val newIncome = Income(
+                                    id = incomeId,
+                                    IncomeName = name,
+                                    Amount = amount,
+                                    Date = currentDate,
+                                    UserId = getUserId()
+                                )
+                                runOnUiThread {
+                                    incomeAdapter.addIncome(newIncome)
+                                }
+                            },
+                            onFailure = { exception ->
+                                runOnUiThread {
+                                    Toast.makeText(this, "Error creating income: ${exception.message}", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                        )
                     }
                 } else {
                     incomeNetworkManager.updateIncome(income.id, name, amount)
+                    val updatedIncome = Income(
+                        id = income.id,
+                        IncomeName = name,
+                        Amount = amount,
+                        Date = income.Date,
+                        UserId = income.UserId
+                    )
                     runOnUiThread {
-                        incomeAdapter.updateIncome(Income(IncomeName = name,
-                            Amount = amount,
-                            UserId = getUserId()), income.id)
+                        incomeAdapter.updateIncome(updatedIncome)
                     }
                 }
             }
@@ -415,16 +445,16 @@ class MainActivity : AppCompatActivity(), UIUpdater {
         dialog.show()
     }
 
+
     fun showSavingsDialog(savings: Savings?) {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.item_savings_edit, null)
         val nameInput = dialogView.findViewById<EditText>(R.id.textViewSavingsName)
         val amountInput = dialogView.findViewById<EditText>(R.id.textViewAmount)
         val currentDate = LocalDate.now().toString()  // Get current date in ISO format
 
-        // Pre-fill the dialog if editing an existing savings, use current date for new savings
         savings?.let {
-            nameInput.setText(savings.SavingsName)
-            amountInput.setText(savings.Amount.toString())
+            nameInput.setText(it.SavingsName)
+            amountInput.setText(it.Amount.toString())
         }
 
         val dialog = AlertDialog.Builder(this)
@@ -433,18 +463,48 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                 val name = nameInput.text.toString()
                 val amount = amountInput.text.toString().toFloatOrNull() ?: 0f
                 if (savings == null) {
-                    // Create a new savings entry with the current date
-                    savingsNetworkManager.createSavings(name, amount, getUserId(), currentDate)
+                    // Asynchronously create a new savings entry with the current date
+                    savingsNetworkManager.createSavings(name, amount, getUserId(), currentDate) { result ->
+                        result.fold(
+                            onSuccess = { savingsId ->
+                                val newSavings = Savings(
+                                    id = savingsId,
+                                    SavingsName = name,
+                                    Amount = amount,
+                                    Date = currentDate,
+                                    UserId = getUserId()
+                                )
+                                runOnUiThread {
+                                    savingsAdapter.addSavings(newSavings)
+                                }
+                            },
+                            onFailure = { exception ->
+                                runOnUiThread {
+                                    Toast.makeText(this, "Error creating savings: ${exception.message}", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                        )
+                    }
                 } else {
                     // Update existing savings entry with the current date
-                    savingsNetworkManager.updateSavings(savings.id, name, amount, currentDate)
+                    savingsNetworkManager.updateSavings(savings.id, name, amount)
+                    val updatedSavings = Savings(
+                        id = savings.id,
+                        SavingsName = name,
+                        Amount = amount,
+                        Date = savings.Date,
+                        UserId = savings.UserId
+                    )
+                    runOnUiThread {
+                        savingsAdapter.updateSavings(updatedSavings)
+                    }
                 }
-                fetchAndDisplaySavings()  // Refresh the UI to show the updated list
             }
             .setNegativeButton("Cancel", null)
             .create()
         dialog.show()
     }
+
 
 
     fun showCategoryDialog(category: ExpenseCategory?) {
@@ -465,24 +525,48 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                 val name = categoryNameInput.text.toString()
                 val budget = categoryBudgetInput.text.toString().toFloatOrNull() ?: 0f
                 if (category == null) {
-                    expenseCategoryNetworkManager.createExpenseCategory(name, budget, getUserId()) // Assume UserId is 1
-                    fetchAndDisplayExpenseCategories()
+                    // Asynchronously create a new category
+                    expenseCategoryNetworkManager.createExpenseCategory(name, budget, getUserId()) { result ->
+                        result.fold(
+                            onSuccess = { categoryId ->
+                                val newCategory = ExpenseCategory(
+                                    id = categoryId,
+                                    CategoryName = name,
+                                    Amount = budget,
+                                    UserId = getUserId()
+                                )
+                                runOnUiThread {
+                                    categoryAdapter.addCategory(newCategory)
+                                }
+                            },
+                            onFailure = { exception ->
+                                runOnUiThread {
+                                    Toast.makeText(this, "Error creating category: ${exception.message}", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                        )
+                    }
                 } else {
+                    // Update existing category
                     category.CategoryName = name
                     category.Amount = budget
                     expenseCategoryNetworkManager.updateExpenseCategory(category.id, name, budget)
-                    fetchAndDisplayExpenseCategories()
+                    runOnUiThread {
+                        categoryAdapter.updateCategory(category)
+                    }
                 }
             }
             .setNegativeButton("Cancel", null)
             .show()
-
     }
 
-    fun showExpenseDialog(expense: Expense?) {
+
+    fun showExpenseDialog(expense: Expense?, categoryId: Int) {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.item_expense_edit, null)
         val nameInput = dialogView.findViewById<EditText>(R.id.textViewExpenseName)
         val amountInput = dialogView.findViewById<EditText>(R.id.textViewExpenseAmount)
+        val currentDate = LocalDate.now().toString()
+
         expense?.let {
             nameInput.setText(it.ExpenseName)
             amountInput.setText(it.Amount.toString())
@@ -493,16 +577,49 @@ class MainActivity : AppCompatActivity(), UIUpdater {
             .setTitle(if (expense == null) "Add Expense" else "Edit Expense")
             .setPositiveButton("Save") { _, _ ->
                 val name = nameInput.text.toString()
-                val amount = amountInput.text.toString().toFloat()
+                val amount = amountInput.text.toString().toFloatOrNull() ?: 0f
+
                 if (expense == null) {
-                    expenseNetworkManager.createExpense(name, amount, System.currentTimeMillis(), 1)
+                    // Asynchronously create a new Expense with the specific categoryId
+                    expenseNetworkManager.createExpense(name, amount, currentDate, categoryId) { result ->
+                        result.fold(
+                            onSuccess = { expenseId ->
+                                val newExpense = Expense(
+                                    id = expenseId,
+                                    ExpenseName = name,
+                                    Amount = amount,
+                                    Date = currentDate,
+                                    CategoryId = categoryId
+                                )
+                                runOnUiThread {
+                                    expenseAdapter.addExpense(newExpense)
+                                }
+                            },
+                            onFailure = { exception ->
+                                runOnUiThread {
+                                    Toast.makeText(this, "Error creating expense: ${exception.message}", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                        )
+                    }
                 } else {
-                    expenseNetworkManager.updateExpense(expense.id, name, amount, System.currentTimeMillis())
+                    // Update the existing Expense with the new details
+                    expenseNetworkManager.updateExpense(expense.id, name, amount, currentDate)
+                    runOnUiThread {
+                        expenseAdapter.updateExpense(
+                            Expense(id = expense.id,
+                                ExpenseName = name,
+                                Amount = amount,
+                                Date = currentDate,
+                                CategoryId = expense.CategoryId))
+                    }
                 }
             }
             .setNegativeButton("Cancel", null)
             .show()
     }
+
+
 
     override fun runOnUIThread(action: () -> Unit) {
         runOnUiThread(action)
