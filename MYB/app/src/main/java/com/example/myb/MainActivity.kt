@@ -66,7 +66,6 @@ class MainActivity : AppCompatActivity(), UIUpdater {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
         expenseCategoryNetworkManager = ExpenseCategoryNetworkManager(this)
         expenseNetworkManager = ExpenseNetworkManager(this)
@@ -399,7 +398,12 @@ class MainActivity : AppCompatActivity(), UIUpdater {
 
 
     fun showIncomeDialog(income: Income?) {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.item_income_edit, null)
+        val dialogView = if (getUserLanguage() == "uk") {
+            LayoutInflater.from(this).inflate(R.layout.item_income_edit_uk, null)
+        } else {
+            LayoutInflater.from(this).inflate(R.layout.item_income_edit, null)
+        }
+
         val nameInput = dialogView.findViewById<EditText>(R.id.income_name_text_view)
         val amountInput = dialogView.findViewById<EditText>(R.id.amount_text_view)
         val currentDate = LocalDate.now().toString()  // Get current date in ISO format
@@ -457,7 +461,11 @@ class MainActivity : AppCompatActivity(), UIUpdater {
 
 
     fun showSavingsDialog(savings: Savings?) {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.item_savings_edit, null)
+        val dialogView = if (getUserLanguage() == "uk") {
+            LayoutInflater.from(this).inflate(R.layout.item_savings_edit_uk, null)
+        } else {
+            LayoutInflater.from(this).inflate(R.layout.item_savings_edit, null)
+        }
         val nameInput = dialogView.findViewById<EditText>(R.id.textViewSavingsName)
         val amountInput = dialogView.findViewById<EditText>(R.id.textViewAmount)
         val currentDate = LocalDate.now().toString()  // Get current date in ISO format
@@ -518,8 +526,11 @@ class MainActivity : AppCompatActivity(), UIUpdater {
 
 
     fun showCategoryDialog(category: ExpenseCategory?) {
-        val layoutInflater = LayoutInflater.from(this)
-        val dialogView = layoutInflater.inflate(R.layout.item_expense_category_edit, null)
+        val dialogView = if (getUserLanguage() == "uk") {
+            LayoutInflater.from(this).inflate(R.layout.item_expense_category_edit_uk, null)
+        } else {
+            LayoutInflater.from(this).inflate(R.layout.item_expense_category_edit, null)
+        }
         val categoryNameInput = dialogView.findViewById<EditText>(R.id.textViewCategoryName)
         val categoryBudgetInput = dialogView.findViewById<EditText>(R.id.textViewCategoryBudget)
 
@@ -572,7 +583,11 @@ class MainActivity : AppCompatActivity(), UIUpdater {
 
 
     fun showExpenseDialog(expense: Expense?, categoryId: Int) {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.item_expense_edit, null)
+        val dialogView = if (getUserLanguage() == "uk") {
+            LayoutInflater.from(this).inflate(R.layout.item_expense_edit_uk, null)
+        } else {
+            LayoutInflater.from(this).inflate(R.layout.item_expense_edit, null)
+        }
         val nameInput = dialogView.findViewById<EditText>(R.id.textViewExpenseName)
         val amountInput = dialogView.findViewById<EditText>(R.id.textViewExpenseAmount)
         val currentDate = LocalDate.now().toString()

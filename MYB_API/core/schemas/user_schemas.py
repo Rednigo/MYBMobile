@@ -28,11 +28,11 @@ class UserSchema(BaseModel):
     email: EmailStr
     username: str
     language: str
-    is_light_scheme: bool | None = None
+    is_light_theme: bool | None = None
 
 
 class UpdateSettings(BaseModel):
     id: int
     username: str
     language: str
-    is_light_scheme: bool | None = None
+    is_light_theme: bool | None = None
