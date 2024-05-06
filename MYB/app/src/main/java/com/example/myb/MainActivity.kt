@@ -1,20 +1,5 @@
 package com.example.myb
 
-
-
-//import android.text.InputType
-//import android.view.ViewGroup
-//import com.example.myb.dao.ExpenseCategoryDao
-//import com.example.myb.dao.SavingsDao
-//import com.example.myb.dao.UserDao
-//import com.example.myb.database.AppDatabase
-
-
-//import android.os.Bundle
-//import android.widget.Button
-//import androidx.appcompat.app.AlertDialog
-//import androidx.appcompat.app.AppCompatActivity
-//import com.example.myb.model.Savings
 import ExpenseAdapter
 import ExpenseCategoryAdapter
 import ExpenseNetworkManager
@@ -67,6 +52,14 @@ class MainActivity : AppCompatActivity(), UIUpdater {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        sharedPreferences = getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
+        if (getUserLanguage() == "uk") {
+            setContentView(R.layout.activity_main_uk)
+        }
+        else {
+            setContentView(R.layout.activity_main)
+        }
+
         setupRecyclerViews()
         setupButtons()
 
@@ -75,13 +68,6 @@ class MainActivity : AppCompatActivity(), UIUpdater {
         savingsNetworkManager = SavingsNetworkManager(this)
         incomeNetworkManager = IncomeNetworkManager(this)
 
-        sharedPreferences = getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-        if (getUserLanguage() == "uk") {
-            setContentView(R.layout.activity_main_uk)
-        }
-        else {
-            setContentView(R.layout.activity_main)
-        }
 
         fetchAndDisplayIncome()
         fetchAndDisplaySavings()
