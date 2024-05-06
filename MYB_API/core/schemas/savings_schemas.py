@@ -13,7 +13,6 @@ class SavingsBase(BaseModel):
 class SavingsUpdateSchema(BaseModel):
     savings_name: str | None = None
     amount: float | None = None
-    date: datetime | None = None
 
 
 class SavingsCreateSchema(SavingsBase):
