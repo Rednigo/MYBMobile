@@ -50,7 +50,7 @@ class SavingsNetworkManager(private val uiUpdater: UIUpdater) {
         }.start()
     }
 
-    fun updateSavings(savingsId: Int, newName: String?, newAmount: Float?, date: String?) {
+    fun updateSavings(savingsId: Int, newName: String?, newAmount: Float?) {
         Thread {
             try {
                 val url = URL("$baseUrl/savings?savings_id=$savingsId")
@@ -63,7 +63,6 @@ class SavingsNetworkManager(private val uiUpdater: UIUpdater) {
                     {
                         "savings_name": "${newName ?: ""}",
                         "amount": ${newAmount ?: "null"}
-
                     }
                 """.trimIndent()
 

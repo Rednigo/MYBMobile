@@ -10,7 +10,7 @@ class ExpenseNetworkManager(private val uiUpdater: UIUpdater) {
     private val baseUrl = ApiConfig.BASE_URL + "/expenses"
 
 
-    fun createExpense(expenseName: String, amount: Float, date: Long, categoryId: Int) {
+    fun createExpense(expenseName: String, amount: Float, date: String, categoryId: Int) {
         Thread {
             try {
                 val url = URL("$baseUrl/expenses")
@@ -52,7 +52,7 @@ class ExpenseNetworkManager(private val uiUpdater: UIUpdater) {
         }.start()
     }
 
-    fun updateExpense(expenseId: Int, newName: String?, newAmount: Float?, newDate: Long?) {
+    fun updateExpense(expenseId: Int, newName: String?, newAmount: Float?, newDate: String?) {
         Thread {
             try {
                 val url = URL("$baseUrl/expenses?expense_id$expenseId")

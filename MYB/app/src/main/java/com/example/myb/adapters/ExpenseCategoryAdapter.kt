@@ -55,8 +55,7 @@ class ExpenseCategoryAdapter(
         holder.editButton.setOnClickListener { activity.showCategoryDialog(category) }
         holder.deleteButton.setOnClickListener {
             val position = holder.adapterPosition
-            categories.removeAt(position)
-            notifyItemRemoved(position)
+            removeCategory(position)
             activity.expenseCategoryNetworkManager.deleteExpenseCategory(category.id)
         }
         holder.addButton.setOnClickListener {
@@ -78,9 +77,12 @@ class ExpenseCategoryAdapter(
         notifyItemInserted(categories.size - 1)
     }
 
-    fun updateCategory(category: ExpenseCategory, position: Int) {
-        categories[position] = category
-        notifyItemChanged(position)
+    fun updateCategory(category: ExpenseCategory) {
+        val index = categories.indexOfFirst { it.id == category.id }
+        if (index != -1) {
+            categories[index] = category
+            notifyItemChanged(index)
+        }
     }
 
     fun removeCategory(position: Int) {

@@ -293,6 +293,11 @@ class MainActivity : AppCompatActivity(), UIUpdater {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.item_income_edit, null)
         val nameInput = dialogView.findViewById<EditText>(R.id.income_name_text_view)
         val amountInput = dialogView.findViewById<EditText>(R.id.amount_text_view)
+
+        income?.let {
+            nameInput.setText(income.IncomeName)
+            amountInput.setText(income.Amount.toString())
+        }
         val dialog = AlertDialog.Builder(this)
             .setView(dialogView)
             .setPositiveButton("Save") { _, _ ->
@@ -308,9 +313,10 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                 } else {
                     incomeNetworkManager.updateIncome(income.id, name, amount)
                     runOnUiThread {
-                        incomeAdapter.updateIncome(Income(IncomeName = name,
+                        incomeAdapter.updateIncome(Income(id = income.id,
+                            IncomeName = name,
                             Amount = amount,
-                            UserId = getUserId()), income.id)
+                            UserId = income.UserId))
                     }
                 }
             }
@@ -339,11 +345,23 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                 if (savings == null) {
                     // Create a new savings entry with the current date
                     savingsNetworkManager.createSavings(name, amount, getUserId(), currentDate)
+                    runOnUiThread {
+                        savingsAdapter.addSavings(Savings(SavingsName = name,
+                            Amount = amount,
+                            Date = currentDate,
+                            UserId = getUserId()))
+                    }
                 } else {
                     // Update existing savings entry with the current date
-                    savingsNetworkManager.updateSavings(savings.id, name, amount, currentDate)
+                    savingsNetworkManager.updateSavings(savings.id, name, amount)
+                    runOnUiThread {
+                        savingsAdapter.updateSavings(Savings(id = savings.id,
+                            SavingsName = name,
+                            Amount = amount,
+                            Date = savings.Date,
+                            UserId = savings.UserId))
+                    }
                 }
-                fetchAndDisplaySavings()  // Refresh the UI to show the updated list
             }
             .setNegativeButton("Cancel", null)
             .create()
@@ -370,12 +388,23 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                 val budget = categoryBudgetInput.text.toString().toFloatOrNull() ?: 0f
                 if (category == null) {
                     expenseCategoryNetworkManager.createExpenseCategory(name, budget, getUserId()) // Assume UserId is 1
-                    fetchAndDisplayExpenseCategories()
+                    runOnUiThread {
+                        categoryAdapter.addCategory(
+                            ExpenseCategory(CategoryName = name,
+                                Amount = budget,
+                                UserId =  getUserId()))
+                    }
                 } else {
                     category.CategoryName = name
                     category.Amount = budget
                     expenseCategoryNetworkManager.updateExpenseCategory(category.id, name, budget)
-                    fetchAndDisplayExpenseCategories()
+                    runOnUiThread {
+                        categoryAdapter.updateCategory(
+                            ExpenseCategory(id = category.id,
+                                CategoryName = name,
+                                Amount = budget,
+                                UserId =  category.UserId))
+                    }
                 }
             }
             .setNegativeButton("Cancel", null)
@@ -387,6 +416,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.item_expense_edit, null)
         val nameInput = dialogView.findViewById<EditText>(R.id.textViewExpenseName)
         val amountInput = dialogView.findViewById<EditText>(R.id.textViewExpenseAmount)
+        val currentDate = LocalDate.now().toString()
         expense?.let {
             nameInput.setText(it.ExpenseName)
             amountInput.setText(it.Amount.toString())
@@ -399,9 +429,24 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                 val name = nameInput.text.toString()
                 val amount = amountInput.text.toString().toFloat()
                 if (expense == null) {
-                    expenseNetworkManager.createExpense(name, amount, System.currentTimeMillis(), 1)
+                    expenseNetworkManager.createExpense(name, amount, currentDate, 1)
+                    runOnUiThread {
+                        expenseAdapter.addExpense(
+                            Expense(ExpenseName = name,
+                                Amount = amount,
+                                Date = currentDate,
+                                CategoryId = 1))
+                    }
                 } else {
-                    expenseNetworkManager.updateExpense(expense.id, name, amount, System.currentTimeMillis())
+                    expenseNetworkManager.updateExpense(expense.id, name, amount, currentDate)
+                    runOnUiThread {
+                        expenseAdapter.updateExpense(
+                            Expense(id = expense.id,
+                                ExpenseName = name,
+                                Amount = amount,
+                                Date = currentDate,
+                                CategoryId = 1))
+                    }
                 }
             }
             .setNegativeButton("Cancel", null)

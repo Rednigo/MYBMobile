@@ -30,8 +30,7 @@ class ExpenseAdapter(
         holder.expenseAmountTextView.text = String.format("$%.2f", expense.Amount)
         holder.editExpenseButton.setOnClickListener { listener.onEditExpense(expense) }
         holder.deleteExpenseButton.setOnClickListener {
-            expenses.removeAt(holder.adapterPosition) // Remove from the list
-            notifyItemRemoved(holder.adapterPosition) // Notify adapter about the removed item
+            removeExpense(holder.adapterPosition)
             listener.onDeleteExpense(expense.id) // Notify deletion to listener
         }
     }
@@ -54,9 +53,12 @@ class ExpenseAdapter(
         notifyItemInserted(expenses.size - 1)
     }
 
-    fun updateExpense(expense: Expense, position: Int) {
-        expenses[position] = expense
-        notifyItemChanged(position)
+    fun updateExpense(expense: Expense) {
+        val index = expenses.indexOfFirst { it.id == expense.id }
+        if (index != -1) {
+            expenses[index] = expense
+            notifyItemChanged(index)
+        }
     }
 
     fun removeExpense(position: Int) {
