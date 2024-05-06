@@ -35,9 +35,8 @@ class ExpenseCategoryAdapter(
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_expense_category, parent, false)
         val adapter = ExpenseAdapter(mutableListOf(), object : ExpenseAdapter.ExpenseItemListener {
             override fun onEditExpense(expense: Expense) {
-                activity.showExpenseDialog(expense, 1)
+                activity.showExpenseDialog(expense, expense.CategoryId)
             }
-
             override fun onDeleteExpense(expenseId: Int) {
                 activity.expenseNetworkManager.deleteExpense(expenseId)
             }
@@ -50,16 +49,17 @@ class ExpenseCategoryAdapter(
         holder.categoryNameTextView.text = category.CategoryName
         holder.categoryBudgetTextView.text = String.format("Budget: $%.2f", category.Amount)
 
+        // Fetch and display expenses for the specific category
         fetchExpensesForCategory(category.id, holder.adapter)
 
         holder.editButton.setOnClickListener { activity.showCategoryDialog(category) }
         holder.deleteButton.setOnClickListener {
-            val position = holder.adapterPosition
-            removeCategory(position)
+            val pos = holder.adapterPosition
+            removeCategory(pos)
             activity.expenseCategoryNetworkManager.deleteExpenseCategory(category.id)
         }
         holder.addButton.setOnClickListener {
-            activity.showExpenseDialog(null, category.id) // Pass `null` or a specific constructor if required
+            activity.showExpenseDialog(null, category.id)
         }
     }
 
@@ -70,7 +70,6 @@ class ExpenseCategoryAdapter(
         categories.addAll(newCategories)
         notifyDataSetChanged()
     }
-
 
     fun addCategory(category: ExpenseCategory) {
         categories.add(category)

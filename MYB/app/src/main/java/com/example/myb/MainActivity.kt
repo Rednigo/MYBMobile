@@ -68,15 +68,15 @@ class MainActivity : AppCompatActivity(), UIUpdater {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        setupRecyclerViews()
+        setupButtons()
+
         expenseCategoryNetworkManager = ExpenseCategoryNetworkManager(this)
         expenseNetworkManager = ExpenseNetworkManager(this)
         savingsNetworkManager = SavingsNetworkManager(this)
         incomeNetworkManager = IncomeNetworkManager(this)
 
         sharedPreferences = getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-
-        setupRecyclerViews()
-        setupButtons()
 
         fetchAndDisplayIncome()
         fetchAndDisplaySavings()
@@ -173,12 +173,22 @@ class MainActivity : AppCompatActivity(), UIUpdater {
         savingsRecyclerView.adapter = savingsAdapter
         savingsRecyclerView.layoutManager = LinearLayoutManager(this)
 
+        expenseAdapter = ExpenseAdapter(mutableListOf(), object : ExpenseAdapter.ExpenseItemListener {
+            override fun onEditExpense(expense: Expense) {
+                showExpenseDialog(expense, expense.CategoryId)
+            }
+            override fun onDeleteExpense(expenseId: Int) {
+                expenseNetworkManager.deleteExpense(expenseId)
+            }
+        })
+
         val categoryRecyclerView = findViewById<RecyclerView>(R.id.expenseCategoryRecyclerView)
         categoryAdapter = ExpenseCategoryAdapter(mutableListOf(), this) { categoryId, expenseAdapter ->
             fetchExpensesForCategory(categoryId, expenseAdapter)
         }
         categoryRecyclerView.adapter = categoryAdapter
         categoryRecyclerView.layoutManager = LinearLayoutManager(this)
+
 
     }
     private fun setupButtons() {
@@ -604,13 +614,13 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                     }
                 } else {
                     // Update the existing Expense with the new details
-                    expenseNetworkManager.updateExpense(expense.id, name, amount, currentDate)
+                    expenseNetworkManager.updateExpense(expense.id, name, amount)
                     runOnUiThread {
                         expenseAdapter.updateExpense(
                             Expense(id = expense.id,
                                 ExpenseName = name,
                                 Amount = amount,
-                                Date = currentDate,
+                                Date = expense.Date,
                                 CategoryId = expense.CategoryId))
                     }
                 }

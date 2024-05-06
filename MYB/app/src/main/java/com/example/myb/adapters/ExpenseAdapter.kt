@@ -9,7 +9,7 @@ import com.example.myb.R
 
 class ExpenseAdapter(
     private var expenses: MutableList<Expense>,
-    private val listener: ExpenseItemListener  // Listener for handling actions
+    private val listener: ExpenseItemListener
 ) : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() {
 
     interface ExpenseItemListener {
@@ -24,6 +24,11 @@ class ExpenseAdapter(
         val deleteExpenseButton: ImageButton = view.findViewById(R.id.buttonDeleteExpense)
     }
 
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_expense, parent, false)
+        return ExpenseViewHolder(view)
+    }
+
     override fun onBindViewHolder(holder: ExpenseViewHolder, position: Int) {
         val expense = expenses[position]
         holder.expenseNameTextView.text = expense.ExpenseName
@@ -31,13 +36,8 @@ class ExpenseAdapter(
         holder.editExpenseButton.setOnClickListener { listener.onEditExpense(expense) }
         holder.deleteExpenseButton.setOnClickListener {
             removeExpense(holder.adapterPosition)
-            listener.onDeleteExpense(expense.id) // Notify deletion to listener
+            listener.onDeleteExpense(expense.id)
         }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_expense, parent, false) as ViewGroup
-        return ExpenseViewHolder(view)
     }
 
     override fun getItemCount(): Int = expenses.size
