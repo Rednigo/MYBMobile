@@ -1,4 +1,5 @@
 
+import android.util.Log
 import android.widget.Toast
 import com.example.myb.interfaces.UIUpdater
 import com.example.myb.utils.ApiConfig
@@ -57,19 +58,20 @@ class ExpenseNetworkManager(private val uiUpdater: UIUpdater) {
     }
 
 
-    fun updateExpense(expenseId: Int, newName: String?, newAmount: Float?, newDate: String?) {
+    fun updateExpense(expenseId: Int, newName: String?, newAmount: Float?) {
         Thread {
             try {
-                val url = URL("$baseUrl/expenses?expense_id$expenseId")
+                val url = URL("$baseUrl/expenses?expense_id=$expenseId")
                 val connection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "PUT"
                 connection.doOutput = true
                 connection.setRequestProperty("Content-Type", "application/json")
 
+                Log.d("Update expense", newName + newAmount.toString())
                 val updatedData = """
                     {
                         "expense_name": "${newName ?: ""}",
-                        "amount": ${newAmount ?: "null"},
+                        "amount": ${newAmount ?: "null"}
                     }
                 """.trimIndent()
 

@@ -8,7 +8,8 @@ import com.example.myb.Income // Replace with your actual Income model import
 import com.example.myb.MainActivity
 import com.example.myb.R
 
-class IncomeAdapter(private var incomes: MutableList<Income>, private val activity: MainActivity) : RecyclerView.Adapter<IncomeAdapter.IncomeViewHolder>() {
+class IncomeAdapter(private var incomes: MutableList<Income>,
+                    private val activity: MainActivity) : RecyclerView.Adapter<IncomeAdapter.IncomeViewHolder>() {
 
     class IncomeViewHolder(view: ViewGroup) : RecyclerView.ViewHolder(view) {
         val incomeNameTextView: TextView = view.findViewById(R.id.income_name_text_view)

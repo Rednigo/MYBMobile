@@ -67,6 +67,9 @@ class MainActivity : AppCompatActivity(), UIUpdater {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setupRecyclerViews()
+        setupButtons()
+
         expenseCategoryNetworkManager = ExpenseCategoryNetworkManager(this)
         expenseNetworkManager = ExpenseNetworkManager(this)
         savingsNetworkManager = SavingsNetworkManager(this)
@@ -79,9 +82,6 @@ class MainActivity : AppCompatActivity(), UIUpdater {
         else {
             setContentView(R.layout.activity_main)
         }
-
-        setupRecyclerViews()
-        setupButtons()
 
         fetchAndDisplayIncome()
         fetchAndDisplaySavings()
@@ -160,12 +160,24 @@ class MainActivity : AppCompatActivity(), UIUpdater {
         savingsRecyclerView.adapter = savingsAdapter
         savingsRecyclerView.layoutManager = LinearLayoutManager(this)
 
+        expenseAdapter = ExpenseAdapter(mutableListOf(), object : ExpenseAdapter.ExpenseItemListener {
+            override fun onEditExpense(expense: Expense) {
+                showExpenseDialog(expense, expense.CategoryId)
+            }
+            override fun onDeleteExpense(expenseId: Int) {
+                expenseNetworkManager.deleteExpense(expenseId)
+            }
+        })
+
+
+
         val categoryRecyclerView = findViewById<RecyclerView>(R.id.expenseCategoryRecyclerView)
         categoryAdapter = ExpenseCategoryAdapter(mutableListOf(), this) { categoryId, expenseAdapter ->
             fetchExpensesForCategory(categoryId, expenseAdapter)
         }
         categoryRecyclerView.adapter = categoryAdapter
         categoryRecyclerView.layoutManager = LinearLayoutManager(this)
+
 
     }
     private fun setupButtons() {
@@ -596,6 +608,7 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                                 )
                                 runOnUiThread {
                                     expenseAdapter.addExpense(newExpense)
+                                    categoryAdapter.notifyChanges()
                                 }
                             },
                             onFailure = { exception ->
@@ -607,15 +620,16 @@ class MainActivity : AppCompatActivity(), UIUpdater {
                     }
                 } else {
                     // Update the existing Expense with the new details
-                    expenseNetworkManager.updateExpense(expense.id, name, amount, currentDate)
+                    expenseNetworkManager.updateExpense(expense.id, name, amount)
                     runOnUiThread {
                         expenseAdapter.updateExpense(
                             Expense(id = expense.id,
                                 ExpenseName = name,
                                 Amount = amount,
-                                Date = currentDate,
+                                Date = expense.Date,
                                 CategoryId = expense.CategoryId))
                     }
+                    categoryAdapter.notifyChanges()
                 }
             }
             .setNegativeButton("Cancel", null)
