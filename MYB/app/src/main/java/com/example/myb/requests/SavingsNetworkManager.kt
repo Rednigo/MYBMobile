@@ -62,8 +62,8 @@ class SavingsNetworkManager(private val uiUpdater: UIUpdater) {
                 val updatedData = """
                     {
                         "savings_name": "${newName ?: ""}",
-                        "amount": ${newAmount ?: "null"},
-                        "date": "${date ?: "null"}"
+                        "amount": ${newAmount ?: "null"}
+
                     }
                 """.trimIndent()
 
