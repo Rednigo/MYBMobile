@@ -38,7 +38,7 @@ class SettingsActivity : AppCompatActivity() {
 
 // Додайте текст-підказку до адаптера (це перший елемент у списку)
 
-        adapter.add("")
+
         adapter.add("Settings")
         adapter.add("Statistics")
         adapter.add("Home")
@@ -54,14 +54,8 @@ class SettingsActivity : AppCompatActivity() {
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 when (position) {
+
                     1 -> {
-                        // Створюємо інтент для переходу на SettingsActivity
-                        val intent = Intent(this@SettingsActivity, SettingsActivity::class.java)
-                        startActivity(intent)
-                        // Завершуємо поточну активність
-                        finish()
-                    }
-                    2 -> {
                         // Створюємо інтент для переходу на SettingsActivity
                         val intent = Intent(this@SettingsActivity, StatisticsActivity::class.java)
                         startActivity(intent)
@@ -69,7 +63,7 @@ class SettingsActivity : AppCompatActivity() {
                         finish()
                     }
 
-                    3 -> {
+                    2 -> {
                         // Створюємо інтент для переходу на StatisticsActivity
                         val intent = Intent(this@SettingsActivity, MainActivity::class.java)
                         // Запускаємо StatisticsActivity
