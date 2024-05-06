@@ -1,5 +1,6 @@
 <resources>
     <string-array name="view_types">
+        <item>Home</item>
         <item>Settings</item>
         <item>Statistics</item>
     </string-array>
