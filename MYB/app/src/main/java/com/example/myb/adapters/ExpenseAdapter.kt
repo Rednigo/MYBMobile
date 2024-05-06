@@ -8,7 +8,7 @@ import com.example.myb.Expense
 import com.example.myb.R
 
 class ExpenseAdapter(
-    private var expenses: List<Expense>,
+    private var expenses: MutableList<Expense>,
     private val listener: ExpenseItemListener  // Listener for handling actions
 ) : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() {
 
@@ -29,7 +29,11 @@ class ExpenseAdapter(
         holder.expenseNameTextView.text = expense.ExpenseName
         holder.expenseAmountTextView.text = String.format("$%.2f", expense.Amount)
         holder.editExpenseButton.setOnClickListener { listener.onEditExpense(expense) }
-        holder.deleteExpenseButton.setOnClickListener { listener.onDeleteExpense(expense.id) }
+        holder.deleteExpenseButton.setOnClickListener {
+            expenses.removeAt(holder.adapterPosition) // Remove from the list
+            notifyItemRemoved(holder.adapterPosition) // Notify adapter about the removed item
+            listener.onDeleteExpense(expense.id) // Notify deletion to listener
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
@@ -40,7 +44,23 @@ class ExpenseAdapter(
     override fun getItemCount(): Int = expenses.size
 
     fun updateExpenses(newExpenses: List<Expense>) {
-        expenses = newExpenses
+        expenses.clear()
+        expenses.addAll(newExpenses)
         notifyDataSetChanged()
+    }
+
+    fun addExpense(expense: Expense) {
+        expenses.add(expense)
+        notifyItemInserted(expenses.size - 1)
+    }
+
+    fun updateExpense(expense: Expense, position: Int) {
+        expenses[position] = expense
+        notifyItemChanged(position)
+    }
+
+    fun removeExpense(position: Int) {
+        expenses.removeAt(position)
+        notifyItemRemoved(position)
     }
 }

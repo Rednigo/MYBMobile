@@ -45,7 +45,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Income"
+                        android:text="Incomes"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
                     <androidx.recyclerview.widget.RecyclerView

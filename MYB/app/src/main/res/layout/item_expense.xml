@@ -7,12 +7,12 @@
     android:padding="16dp">
 
     <!-- Expense Name -->
-    <EditText
+    <TextView
         android:id="@+id/textViewExpenseName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:textSize="18sp"
+        android:textSize="22sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/textViewExpenseAmount"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,11 +21,11 @@
 
 
     <!-- Expense Amount -->
-    <EditText
+    <TextView
         android:id="@+id/textViewExpenseAmount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:textSize="22sp"
         app:layout_constraintTop_toBottomOf="@+id/textViewExpenseName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/buttonEditExpense"

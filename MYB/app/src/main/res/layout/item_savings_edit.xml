@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <!-- Savings Name EditText -->
+    <EditText
+        android:id="@+id/textViewSavingsName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:textSize="22sp"
+        android:layout_marginEnd="8dp"
+        android:hint="Savings Name" /> <!-- Changed text to hint for better UX -->
+
+    <!-- Amount EditText -->
+    <EditText
+        android:id="@+id/textViewAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:textSize="22sp"
+        android:layout_marginEnd="8dp"
+        android:layout_below="@id/textViewSavingsName"
+        android:hint="0.00" /> <!-- Changed text to hint for better UX -->
+
+</RelativeLayout>
