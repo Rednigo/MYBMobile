@@ -38,6 +38,6 @@ def update_savings_endpoint(savings_id: int, savings: SavingsUpdateSchema, db: S
     return update_savings(db=db, savings_id=savings_id, savings=savings)
 
 
-@router.delete("/savings/", response_model=SavingsSchema)
+@router.delete("/savings", response_model=SavingsSchema)
 def delete_savings_endpoint(savings_id: int, db: Session = Depends(get_db)):
     return delete_savings(db=db, savings_id=savings_id)
