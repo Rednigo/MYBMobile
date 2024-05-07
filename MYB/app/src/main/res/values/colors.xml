@@ -9,4 +9,17 @@
         <color name="accent_color_light">#BB3030</color>
         <color name="accent_color_dark">#370808</color>
 
+    <color name="colorPrimaryLight">#F8E6A0</color>
+    <color name="colorPrimaryVariantLight">#FFF7D6</color>
+    <color name="colorSecondaryLight">#FFF7D6</color>
+    <color name="colorSecondaryVariantLight">#B38600</color>
+    <color name="colorBtnLight">#946F00</color>
+
+
+    <color name="colorPrimaryDarkest">#164555</color>
+    <color name="colorPrimaryVariantDarkest">#C6EDFB</color>
+    <color name="colorSecondaryDarkest">#E7F9FF</color>
+    <color name="colorSecondaryVariantDarkest">#6CC3E0</color>
+    <color name="colorBtnDark">#2898BD</color>
+
 </resources>

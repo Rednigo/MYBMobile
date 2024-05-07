@@ -6,5 +6,7 @@
         <color android:name="colorAccent">#FFFFFF</color> <!-- White -->
         <color android:name="colorTextPrimary">#000000</color> <!-- Black -->
         <color android:name="table_color">#A54242</color>
+
+
     </resources>
 </selector>

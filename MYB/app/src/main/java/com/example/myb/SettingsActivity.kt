@@ -6,13 +6,19 @@ import android.content.Intent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Spinner
+import androidx.appcompat.app.AppCompatDelegate
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 class SettingsActivity : AppCompatActivity() {
 
+    private val themeTitleList = arrayOf("Light","Dark","Auto (System)")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -82,5 +88,34 @@ class SettingsActivity : AppCompatActivity() {
         }
 
 
+
+
+
+       val changeThemeBtn = findViewById<Button>(R.id.changeThemeBtn)
+
+
+
+        val sharedPreferenceManager = SharedPreferenceManager(this)
+        var checkedTheme = sharedPreferenceManager.theme
+        changeThemeBtn.text = "${themeTitleList[checkedTheme]}"
+        val themeDialog = MaterialAlertDialogBuilder(this)
+            .setTitle("Theme")
+            .setPositiveButton("Ok"){_,_ ->
+                sharedPreferenceManager.theme = checkedTheme
+                AppCompatDelegate.setDefaultNightMode(sharedPreferenceManager.themeFlag[checkedTheme])
+                changeThemeBtn.text = "${themeTitleList[checkedTheme]}"
+            }
+            .setSingleChoiceItems(themeTitleList,checkedTheme){_, which ->
+                checkedTheme = which
+            }
+            .setCancelable(false)
+
+        changeThemeBtn.setOnClickListener {
+            themeDialog.show()
+        }
+
+
+
     }
+
 }

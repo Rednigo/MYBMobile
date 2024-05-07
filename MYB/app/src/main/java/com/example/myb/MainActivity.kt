@@ -2,17 +2,17 @@ package com.example.myb
 
 
 
-import android.os.Bundle
+//import android.os.Bundle
 import android.text.InputType
 import android.view.ViewGroup
-import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
+//import android.widget.Button
+//import androidx.appcompat.app.AppCompatActivity
 import com.example.myb.dao.ExpenseCategoryDao
 import com.example.myb.dao.SavingsDao
 import com.example.myb.dao.UserDao
 import com.example.myb.database.AppDatabase
-import com.example.myb.model.Savings
-import androidx.appcompat.app.AlertDialog
+//import com.example.myb.model.Savings
+//import androidx.appcompat.app.AlertDialog
 
 
 import ExpenseAdapter
@@ -23,12 +23,17 @@ import IncomeNetworkManager
 import SavingsAdapter
 import SavingsNetworkManager
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -62,6 +67,59 @@ class MainActivity : AppCompatActivity(), UIUpdater {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val spinner = findViewById<Spinner>(R.id.dropdownSpinner)
+
+// Створіть пустий адаптер для Spinner
+        val adapter = ArrayAdapter<String>(this, R.layout.spinner_item_header)
+
+// Встановіть макет для випадаючого списку
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+// Додайте текст-підказку до адаптера (це перший елемент у списку)
+
+        adapter.add("Home")
+        adapter.add("Settings")
+        adapter.add("Statistics")
+
+
+
+
+// Встановіть адаптер для Spinner
+        spinner.adapter = adapter
+
+        // Встановіть підказку
+        spinner.prompt = "Choose an option"
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                when (position) {
+
+                    1 -> {
+                        // Створюємо інтент для переходу на SettingsActivity
+                        val intent = Intent(this@MainActivity, SettingsActivity::class.java)
+                        startActivity(intent)
+                        // Завершуємо поточну активність
+                        finish()
+                    }
+
+                    2 -> {
+                        // Створюємо інтент для переходу на StatisticsActivity
+                        val intent = Intent(this@MainActivity, StatisticsActivity::class.java)
+                        // Запускаємо StatisticsActivity
+                        startActivity(intent)
+                        // Завершуємо поточну активність
+                        finish()
+                    }
+                    // Додайте інші варіанти, якщо потрібно
+                }
+
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Нічого не робимо, якщо нічого не вибрано
+            }
+        }
 
        // super.onCreate(savedInstanceState)
        // supportFragmentManager.beginTransaction()
@@ -118,13 +176,13 @@ class MainActivity : AppCompatActivity(), UIUpdater {
 //        }
 
         val buttonAddIncome: Button = findViewById(R.id.addIncomeButton)
-        val buttonAddSavings: Button = findViewById(R.id.addPreservationButton)
+      //  val buttonAddSavings: Button = findViewById(R.id.addPreservationButton)
 
         // Set a click listener for the Add Income button
         buttonAddIncome.setOnClickListener {
             // Code to handle Add Income button click
             // You might want to show a dialog or start a new activity to add income
-            showIncomeDialog()
+        //    showIncomeDialog()
         }
 
         expenseCategoryNetworkManager = ExpenseCategoryNetworkManager(this)

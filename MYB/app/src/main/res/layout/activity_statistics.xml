@@ -53,7 +53,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Back"
-            android:textColor="@android:color/black"
             android:textSize="14sp"
             android:layout_gravity="center_vertical" />
 

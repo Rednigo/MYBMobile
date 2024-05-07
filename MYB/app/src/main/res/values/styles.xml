@@ -3,13 +3,5 @@
     <style name="Button.LightRed" parent="ThemeOverlay.AppCompat">
         <item name="colorAccent">@color/accent_color_light</item>
     </style>
-    <!-- Світла тема -->
-    <style name="AppTheme.Light" parent="Theme.AppCompat.Light">
-        <!-- Додаткові атрибути теми, які ви хочете налаштувати -->
-    </style>
 
-    <!-- Темна тема -->
-    <style name="AppTheme.Dark" parent="Theme.AppCompat">
-        <!-- Додаткові атрибути теми, які ви хочете налаштувати -->
-    </style>
 </resources>
