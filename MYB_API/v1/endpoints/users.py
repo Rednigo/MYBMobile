@@ -49,10 +49,12 @@ def get_statistic_endpoint(user_id: int, db: Session = Depends(get_db)):
 @router.put("/settings", response_model=UserSchema)
 def register(user: UpdateSettings, db: Session = Depends(get_db)):
     try:
+        print(user)
         new_user = update_user_settings(db=db, user_data=user)
         return new_user
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
 
 @router.get("/settings", response_model=UserSchema)
 def register(user_id: int, db: Session = Depends(get_db)):

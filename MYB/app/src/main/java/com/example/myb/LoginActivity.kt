@@ -60,11 +60,13 @@ class LoginActivity : AppCompatActivity() {
                     val jsonResponse = JSONObject(response)
                     val userId = jsonResponse.getInt("id")
                     val userLang = jsonResponse.getString("language")
+                    val userTheme = jsonResponse.getBoolean("is_light_theme")
 
                     val sharedPrefs = getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
                     sharedPrefs.edit().apply {
                         putInt("USER_ID", userId)
                         putString("LANG", userLang)
+                        putBoolean("IS_LIGHT_THEME", userTheme)
                         apply()
                     }
 

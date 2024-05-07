@@ -1,5 +1,6 @@
 package com.example.myb
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -23,13 +24,15 @@ class StatisticsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        if (getUserLanguage() == "uk") {
-//            setContentView(R.layout.activity_statistics_uk)
-//        }
-//        else {
-//            setContentView(R.layout.activity_statistics)
-//        }
-        setContentView(R.layout.activity_statistics)
+        sharedPreferences = getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
+
+        if (getUserLanguage() == "uk") {
+            setContentView(R.layout.activity_statistics_uk)
+        }
+        else {
+            setContentView(R.layout.activity_statistics)
+        }
+
         val tableLayout = findViewById<LinearLayout>(R.id.statistics_table_id)
         fetchStatistics(tableLayout)
 

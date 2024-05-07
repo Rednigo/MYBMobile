@@ -30,9 +30,8 @@ def create_user(db: Session, user_data: UserCreateSchema):
 
 def update_user_settings(db: Session, user_data: UpdateSettings):
     new_user = UserUpdateSchema(
-        username=user_data.username,
         language=user_data.language,
-        is_light_scheme=user_data.is_light_scheme,
+        is_light_theme=user_data.is_light_theme,
     )
     return db_update_user(db, user_data.id, new_user)
 
