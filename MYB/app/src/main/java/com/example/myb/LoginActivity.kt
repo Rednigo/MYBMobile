@@ -20,8 +20,8 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        val sharedPreferenceManager = SharedPreferenceManager(this)
-        AppCompatDelegate.setDefaultNightMode(sharedPreferenceManager.themeFlag[sharedPreferenceManager.theme])
+        //val sharedPreferenceManager = SharedPreferenceManager(this)
+        //AppCompatDelegate.setDefaultNightMode(sharedPreferenceManager.themeFlag[sharedPreferenceManager.theme])
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_layout)

@@ -97,7 +97,7 @@ class SettingsActivity : AppCompatActivity() {
 
         val sharedPreferenceManager = SharedPreferenceManager(this)
         var checkedTheme = sharedPreferenceManager.theme
-        changeThemeBtn.text = "${themeTitleList[checkedTheme]}"
+        changeThemeBtn.text = "${themeTitleList[sharedPreferenceManager.theme]}"
         val themeDialog = MaterialAlertDialogBuilder(this)
             .setTitle("Theme")
             .setPositiveButton("Ok"){_,_ ->

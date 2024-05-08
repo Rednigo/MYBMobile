@@ -15,7 +15,7 @@ class SharedPreferenceManager (context:Context){
     private  val  keyTheme = "theme"
 
     var theme
-        get() = prefernce.getInt(keyTheme, 1)
+        get() = prefernce.getInt(keyTheme, 3)
         set(value){
             editor.putInt(keyTheme, value)
             editor.commit()

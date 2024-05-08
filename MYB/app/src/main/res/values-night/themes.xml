@@ -9,6 +9,8 @@
         <item name="colorSecondary">@color/table_color</item>
         <item name="colorSecondaryVariant">@color/black</item>
         <item name="colorOnSecondary">@color/white</item>
+
+
     </style>
 
     <style name="ThemeBackground" parent="ThemeOverlay.AppCompat">
