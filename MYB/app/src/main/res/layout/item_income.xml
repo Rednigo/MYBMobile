@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/income_name_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="11dp"
+        android:layout_toStartOf="@+id/edit_income_button"
+        android:text="Income Name"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/amount_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/income_name_text_view"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="5dp"
+        android:layout_toStartOf="@+id/edit_income_button"
+        android:text="$0.00"
+        android:textSize="22sp" />
+
+    <ImageButton
+        android:id="@+id/edit_income_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@id/income_name_text_view"
+        android:src="@android:drawable/ic_menu_edit" />
+
+    <!-- Delete Button -->
+    <ImageButton
+        android:id="@+id/delete_income_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/edit_income_button"
+        android:src="@android:drawable/ic_menu_delete" />
+</RelativeLayout>

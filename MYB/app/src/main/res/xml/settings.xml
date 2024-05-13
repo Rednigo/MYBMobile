@@ -1,0 +1,26 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        app:layout="@layout/custom_header"
+        app:key="custom_header" />
+
+
+    <PreferenceCategory app:title="Language">
+        <ListPreference
+            app:key="language"
+            app:title="Language"
+            app:summary="Select your preferred language"
+            app:entryValues="@array/languages"
+            app:defaultValue="en" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Theme">
+        <ListPreference
+            app:key="theme"
+            app:title="Theme"
+            app:summary="Select app theme"
+            app:entryValues="@array/theme_values"
+            app:defaultValue="light" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

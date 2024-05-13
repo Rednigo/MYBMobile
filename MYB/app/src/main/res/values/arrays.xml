@@ -1,0 +1,28 @@
+<resources>
+    <string-array name="view_types">
+        <item>Home</item>
+        <item>Settings</item>
+        <item>Statistics</item>
+    </string-array>
+
+
+    <string-array name="languages">
+        <item>English</item>
+        <item>Ukrainian</item>
+    </string-array>
+
+    <string-array name="languages_uk">
+        <item>Англійська</item>
+        <item>Українська</item>
+    </string-array>
+
+    <string-array name="theme_values">
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+
+    <string-array name="theme_values_uk">
+        <item>Світла</item>
+        <item>Темна</item>
+    </string-array>
+</resources>

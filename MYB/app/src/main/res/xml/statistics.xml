@@ -1,0 +1,22 @@
+<!-- layout.statistics.xml -->
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Хедер -->
+    <Preference
+        app:layout="@layout/custom_header"
+        app:key="custom_header" />
+
+    <!-- Категорія "Statistics" -->
+    <PreferenceCategory app:title="Statistics">
+
+        <!-- Табличка -->
+        <Preference
+
+            app:key="statistics_table"
+            app:title="Statistics Table"
+            app:summary="View statistics in table format"
+            app:layout="@layout/statistics_table" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="table_color">#A54242</color>
+
+    <color name="accent_color">#7B1D1D</color>
+    <color name="accent_color_light">#BB3030</color>
+    <color name="accent_color_dark">#370808</color>
+
 </resources>
