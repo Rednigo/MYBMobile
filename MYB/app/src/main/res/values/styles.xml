@@ -3,4 +3,5 @@
     <style name="Button.LightRed" parent="ThemeOverlay.AppCompat">
         <item name="colorAccent">@color/accent_color_light</item>
     </style>
+
 </resources>

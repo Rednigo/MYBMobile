@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.myb.utils.ApiConfig
 import org.json.JSONObject
 import java.io.OutputStreamWriter
@@ -18,6 +19,10 @@ class LoginActivity : AppCompatActivity() {
     private val PREF_FILE = ApiConfig.PREF_FILE
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        //val sharedPreferenceManager = SharedPreferenceManager(this)
+        //AppCompatDelegate.setDefaultNightMode(sharedPreferenceManager.themeFlag[sharedPreferenceManager.theme])
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_layout)
 

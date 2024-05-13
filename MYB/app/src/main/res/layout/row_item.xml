@@ -2,15 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
     android:orientation="horizontal"
-    android:padding="8dp">
+    android:padding="8dp"
+    android:background="@color/white">
 
     <!-- TextView для місяця -->
     <TextView
         android:id="@+id/monthTextView"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         />
 
     <!-- Проміжок між місяцем і доходами -->
@@ -22,7 +23,8 @@
     <TextView
         android:id="@+id/incomeTextView"
         android:layout_width="80dp"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"/>
 
     <!-- Проміжок між доходами і витратами -->
     <View
@@ -33,7 +35,8 @@
     <TextView
         android:id="@+id/expenseTextView"
         android:layout_width="80dp"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"/>
 
     <!-- Проміжок між витратами і заощадженнями -->
     <View
@@ -44,6 +47,7 @@
     <TextView
         android:id="@+id/savedTextView"
         android:layout_width="80dp"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"/>
 
 </LinearLayout>

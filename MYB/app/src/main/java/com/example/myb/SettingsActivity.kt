@@ -12,7 +12,11 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Spinner
+import androidx.appcompat.app.AppCompatDelegate
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import android.widget.Toast
 import com.example.myb.utils.ApiConfig
 import org.json.JSONObject
@@ -24,6 +28,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private val PREF_FILE = ApiConfig.PREF_FILE
 
+    private val themeTitleList = arrayOf("Light","Dark","Auto (System)")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedPreferences = getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
@@ -47,6 +52,8 @@ class SettingsActivity : AppCompatActivity() {
         val spinner = findViewById<Spinner>(R.id.dropdownSpinner)
         val adapter = ArrayAdapter<String>(this, R.layout.spinner_item_header)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        adapter.add("Settings")
         adapter.add("Statistics")
         adapter.add("Home")
         adapter.add("Settings")
@@ -173,7 +180,34 @@ class SettingsActivity : AppCompatActivity() {
         return sharedPreferences.getInt("USER_ID", -1) // -1 as default if not found
     }
 
+
+
+       val changeThemeBtn = findViewById<Button>(R.id.changeThemeBtn)
+
+
+
+        val sharedPreferenceManager = SharedPreferenceManager(this)
+        var checkedTheme = sharedPreferenceManager.theme
+        changeThemeBtn.text = "${themeTitleList[sharedPreferenceManager.theme]}"
+        val themeDialog = MaterialAlertDialogBuilder(this)
+            .setTitle("Theme")
+            .setPositiveButton("Ok"){_,_ ->
+                sharedPreferenceManager.theme = checkedTheme
+                AppCompatDelegate.setDefaultNightMode(sharedPreferenceManager.themeFlag[checkedTheme])
+                changeThemeBtn.text = "${themeTitleList[checkedTheme]}"
+            }
+            .setSingleChoiceItems(themeTitleList,checkedTheme){_, which ->
+                checkedTheme = which
+            }
+            .setCancelable(false)
+
+        changeThemeBtn.setOnClickListener {
+            themeDialog.show()
+        }
+
     private fun getUserLanguage(): String? {
         return sharedPreferences.getString("LANG", "en") // -1 as default if not found
+
     }
+
 }
