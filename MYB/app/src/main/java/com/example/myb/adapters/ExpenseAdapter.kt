@@ -9,7 +9,7 @@ import com.example.myb.R
 
 class ExpenseAdapter(
     private var expenses: MutableList<Expense>,
-    private val listener: ExpenseItemListener  // Listener for handling actions
+    private val listener: ExpenseItemListener
 ) : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() {
 
     interface ExpenseItemListener {
@@ -24,21 +24,20 @@ class ExpenseAdapter(
         val deleteExpenseButton: ImageButton = view.findViewById(R.id.buttonDeleteExpense)
     }
 
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_expense, parent, false)
+        return ExpenseViewHolder(view)
+    }
+
     override fun onBindViewHolder(holder: ExpenseViewHolder, position: Int) {
         val expense = expenses[position]
         holder.expenseNameTextView.text = expense.ExpenseName
         holder.expenseAmountTextView.text = String.format("$%.2f", expense.Amount)
         holder.editExpenseButton.setOnClickListener { listener.onEditExpense(expense) }
         holder.deleteExpenseButton.setOnClickListener {
-            expenses.removeAt(holder.adapterPosition) // Remove from the list
-            notifyItemRemoved(holder.adapterPosition) // Notify adapter about the removed item
-            listener.onDeleteExpense(expense.id) // Notify deletion to listener
+            removeExpense(holder.adapterPosition)
+            listener.onDeleteExpense(expense.id)
         }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_expense, parent, false) as ViewGroup
-        return ExpenseViewHolder(view)
     }
 
     override fun getItemCount(): Int = expenses.size
@@ -54,9 +53,12 @@ class ExpenseAdapter(
         notifyItemInserted(expenses.size - 1)
     }
 
-    fun updateExpense(expense: Expense, position: Int) {
-        expenses[position] = expense
-        notifyItemChanged(position)
+    fun updateExpense(expense: Expense) {
+        val index = expenses.indexOfFirst { it.id == expense.id }
+        if (index != -1) {
+            expenses[index] = expense
+            notifyItemChanged(index)
+        }
     }
 
     fun removeExpense(position: Int) {

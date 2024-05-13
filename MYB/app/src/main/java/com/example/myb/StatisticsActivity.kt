@@ -1,6 +1,8 @@
 package com.example.myb
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -8,48 +10,31 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-
+import com.example.myb.utils.ApiConfig
+import org.json.JSONObject
+import java.net.HttpURLConnection
+import java.net.URL
 
 class StatisticsActivity : AppCompatActivity() {
+    private lateinit var sharedPreferences: SharedPreferences
+    private val PREF_FILE = ApiConfig.PREF_FILE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_statistics)
+        sharedPreferences = getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
 
-        // Отримуємо рідну ViewGroup, в яку будемо додавати рядки
-        val tableLayout = findViewById<LinearLayout>(R.id.statistics_table_id)
-
-        // Перелік даних для кожного рядка (наприклад, замість цього можна використовувати дані з бази даних)
-        val months = arrayOf("January", "February", "March", "April")
-        val incomes = intArrayOf(1000, 1500, 1200, 2000)
-        val expenses = intArrayOf(500, 600, 800, 1000)
-        val saved = intArrayOf(500, 900, 400, 1000)
-
-        // Проходимо по кожному елементу масиву даних і додаємо їх у таблицю
-        for (i in months.indices) {
-            // Створюємо новий рядок, використовуючи макет row_item.xml
-            val rowView = layoutInflater.inflate(R.layout.row_item, null)
-
-            // Знаходимо TextView для місяця у цьому рядку
-            val monthTextView = rowView.findViewById<TextView>(R.id.monthTextView)
-            // Встановлюємо текст місяця
-            monthTextView.text = months[i]
-
-            // Знаходимо інші TextView для доходів, витрат і заощаджень у цьому рядку
-            val incomeTextView = rowView.findViewById<TextView>(R.id.incomeTextView)
-            val expenseTextView = rowView.findViewById<TextView>(R.id.expenseTextView)
-            val savedTextView = rowView.findViewById<TextView>(R.id.savedTextView)
-
-            // Встановлюємо дані для доходів, витрат і заощаджень
-            incomeTextView.text = incomes[i].toString()
-            expenseTextView.text = expenses[i].toString()
-            savedTextView.text = saved[i].toString()
-
-            // Додаємо рядок у загальну таблицю
-            tableLayout.addView(rowView)
+        if (getUserLanguage() == "uk") {
+            setContentView(R.layout.activity_statistics_uk)
         }
+        else {
+            setContentView(R.layout.activity_statistics)
+        }
+
+        val tableLayout = findViewById<LinearLayout>(R.id.statistics_table_id)
+        fetchStatistics(tableLayout)
 
         // Додаємо лінію в кінці таблиці
         val lineView = View(this)
@@ -121,10 +106,61 @@ class StatisticsActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 // Нічого не робимо, якщо нічого не вибрано
             }
+
         }
+    }
 
+    private fun fetchStatistics(tableLayout: LinearLayout) {
+        Thread {
+            try {
+                val userId = 1  // getUserId()  // Implement this method to retrieve the user ID
+                val url = URL("${ApiConfig.BASE_URL}/users/statistic?user_id=$userId")
+                val httpURLConnection = url.openConnection() as HttpURLConnection
+                httpURLConnection.requestMethod = "GET"
 
+                val responseCode = httpURLConnection.responseCode
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    val inputStream = httpURLConnection.inputStream
+                    val response = inputStream.bufferedReader().use { it.readText() }
+                    val jsonObject = JSONObject(response)
+                    updateUI(jsonObject, tableLayout)
+                } else {
+                    runOnUiThread {
+                        Toast.makeText(this, "Failed to fetch statistics", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                runOnUiThread {
+                    Toast.makeText(this, "Error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }.start()
+    }
 
+    private fun getUserId(): Int {
+        return sharedPreferences.getInt("USER_ID", -1) // -1 as default if not found
+    }
 
+    private fun getUserLanguage(): String? {
+        return sharedPreferences.getString("LANG", "en") // -1 as default if not found
+    }
+
+    private fun updateUI(jsonObject: JSONObject, tableLayout: LinearLayout) {
+        val months = jsonObject.getJSONArray("months")
+        val incomes = jsonObject.getJSONArray("incomes")
+        val expenses = jsonObject.getJSONArray("expenses")
+        val saved = jsonObject.getJSONArray("saved")
+
+        runOnUiThread {
+            for (i in 0 until months.length()) {
+                val rowView = layoutInflater.inflate(R.layout.row_item, tableLayout, false)
+                rowView.findViewById<TextView>(R.id.monthTextView).text = months.getString(i)
+                rowView.findViewById<TextView>(R.id.incomeTextView).text = incomes.getInt(i).toString()
+                rowView.findViewById<TextView>(R.id.expenseTextView).text = expenses.getInt(i).toString()
+                rowView.findViewById<TextView>(R.id.savedTextView).text = saved.getInt(i).toString()
+                tableLayout.addView(rowView)
+            }
+        }
     }
 }
